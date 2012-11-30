@@ -42,3 +42,7 @@ if [ -z "$XP_CHROOT" ]; then
 	fi
 fi
 
+for i in $XP_FOLDER/bashrc.d/*.sh; do
+	[ -x "$i" ] && . "$i"
+done
+

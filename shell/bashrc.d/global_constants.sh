@@ -13,11 +13,11 @@
 #
 
 # Prompts {{{1
-if [ -z "$XP_NO_COLOR_PS" ]
-	PS1='\[\e[0m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[0m\]@\[\e[32m\]\h\[\e[0m\]:\[\e[34m\]\W\[\e[0m\]]\[\e[31m\]\$\[\e[0m\] '
+if [ -z "$XP_NO_COLOR_PS" ]; then
+	export PS1='\[\e[0m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[0m\]@\[\e[32m\]\h\[\e[0m\]:\[\e[34m\]\W\[\e[0m\]]\[\e[31m\]\$\[\e[0m\] '
 else
 	# Use one escape code to reset formatting, even though we aren't using color.
-	PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}\u@\h:\W]\$ '
+	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}\u@\h:\W]\$ '
 fi
 
 # Command History {{{1
@@ -40,19 +40,19 @@ if [ -z "$XP_NO_TEMP" ]; then
 	fi
 
 	if [ "$auto_temp" = yes ]; then
-		if [ -d "$HOME/tmp" -w "$HOME/tmp" ]; then
+		if [ -d "$HOME/tmp" -a -w "$HOME/tmp" ]; then
 			XP_TEMP="$HOME/tmp"
 			set_temp=yes
-		elif [ -d "$HOME/.tmp" -w "$HOME/.tmp" ]; then
+		elif [ -d "$HOME/.tmp" -a -w "$HOME/.tmp" ]; then
 			XP_TEMP="$HOME/.tmp"
 			set_temp=yes
-		elif [ ! -e "$HOME/tmp" -d "$HOME" -w "$HOME" ]; then
+		elif [ ! -e "$HOME/tmp" -a -d "$HOME" -w "$HOME" ]; then
 			XP_TEMP="$HOME/tmp"
 			mkdir "$XP_TEMP" && set_temp=yes || set_temp=no
-		elif [ ! -e "$HOME/.tmp" -d "$HOME" -w "$HOME" ]; then
+		elif [ ! -e "$HOME/.tmp" -a -d "$HOME" -w "$HOME" ]; then
 			XP_TEMP="$HOME/.tmp"
 			mkdir "$XP_TEMP" && set_temp=yes || set_temp=no
-		elif [ -d '/tmp' -w '/tmp' ]; then
+		elif [ -d '/tmp' -a -w '/tmp' ]; then
 			XP_TEMP='/tmp'
 			set_temp=yes
 		else
@@ -63,12 +63,12 @@ if [ -z "$XP_NO_TEMP" ]; then
 	fi
 
 	if [ "$set_temp" = yes ]; then
-		TEMP="$XP_TEMP"
-		TMPDIR="$TEMP"
-	elif [ -z "$TEMP" ] && [ ! -z "$TMPDIR" ]; then
-		TEMP="$TMPDIR"
-	elif [ -a "$TMPDIR" ] && [ ! -z "$TEMP" ]; then
-		TMPDIR="$TEMP"
+		export TEMP="$XP_TEMP"
+		export TMPDIR="$TEMP"
+	elif [ -z "$TEMP" -a -n "$TMPDIR" ]; then
+		export TEMP="$TMPDIR"
+	elif [ -a "$TMPDIR" -a -n "$TEMP" ]; then
+		export TMPDIR="$TEMP"
 	fi
 
 	unset auto_temp set_temp
@@ -83,7 +83,7 @@ if [ -z "$XP_NO_COLOR" ]; then
 			;;
 
 		*-8color | *-16color | *-256color)
-			[ ! -z "$XP_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
+			[ -n "$XP_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
 			;;
 
 		*)
