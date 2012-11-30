@@ -199,6 +199,8 @@
 
 			" Move easily between panes with Ctrl + DirectionalLetter and Ctrl + Arrow.
 			" <C-L> normally redraws the screen in normal mode.  Use :redraw instead.
+			" <C-K> normally inserts the next key in <> notation.  Use <C-,> instead.
+			" For digraphs, use {char1} <BS> {char2} (intrinsic feature).
 			noremap <C-K> <C-W>k
 			noremap <C-J> <C-W>j
 			noremap <C-H> <C-W>h
@@ -215,11 +217,9 @@
 			noremap! <C-Down> <C-W>j
 			noremap! <C-Left> <C-W>h
 			noremap! <C-Right> <C-W>l
-			" <C-K> normally inserts the next key in <> notation.  Use <C-I> instead.
-			" For digraphs, use {char1} <BS> {char2} (intrinsic feature).
-			" Intrinsic <C-I> often duplicates the functionality of <Tab> as the wildchar, so use <Tab> instead.
-			noremap <C-I> <C-K>
-			noremap! <C-I> <C-K>
+			" Replace <C-K>.
+			noremap <C-,> <C-K>
+			noremap! <C-,> <C-K>
 		endif
 
 

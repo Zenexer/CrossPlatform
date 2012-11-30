@@ -22,16 +22,33 @@
 #		XP_FORCE_COLOR	If set, force setting of terminal colors, even if the number of colors is already specified.
 #		XP_NO_TEMP		If set, don't change $TEMP et al.
 #		XP_TEMP			If set, uses the given temporary directory.
+
+
+# Require Interactive {{{1
 #
+#
+
+[ -z "$PS1" ] && return
 
 
 # Initialize CrossPlatform Constants {{{1
+#
+#
 
 [ -z "$XP_FOLDER" ] && export XP_FOLDER="$(cd "$(dirname "${BASH_PATH[0]}")" && pwd)"
 
 
-# Initialize Global Constants {{{1
+# Shell Options {{{1
+#
+#
 
+
+
+# Initialize Global Constants {{{1
+#
+#
+
+# Temporary Directory {{{2
 if [ -z "$XP_NO_TEMP" ]; then
 	if [ -z "$XP_TEMP" ]; then
 		auto_temp=yes
@@ -40,17 +57,39 @@ if [ -z "$XP_NO_TEMP" ]; then
 	elif [ -e "$XP_TEMP" ]; then
 		auto_temp=yes
 	else
-		mkdir "$XP_TEMP" && auto_temp=0 || auto_tmp=1
+		mkdir "$XP_TEMP" && auto_temp=no || auto_tmp=yes
 	fi
 
 	if [ "$auto_temp" = yes ]; then
 		if [ -d "$HOME/tmp" -w "$HOME/tmp" ]; then
 			XP_TEMP="$HOME/tmp"
+			set_temp=yes
 		elif [ -d "$HOME/.tmp" -w "$HOME/.tmp" ]; then
 			XP_TEMP="$HOME/.tmp"
-		else
 			set_temp=yes
+		elif [ ! -e "$HOME/tmp" -d "$HOME" -w "$HOME" ]; then
+			XP_TEMP="$HOME/tmp"
+			mkdir "$XP_TEMP" && set_temp=yes || set_temp=no
+		elif [ ! -e "$HOME/.tmp" -d "$HOME" -w "$HOME" ]; then
+			XP_TEMP="$HOME/.tmp"
+			mkdir "$XP_TEMP" && set_temp=yes || set_temp=no
+		elif [ -d '/tmp' -w '/tmp' ]; then
+			XP_TEMP='/tmp'
+			set_temp=yes
+		else
+			set_temp=no
 		fi
+	else
+		set_temp=yes
+	fi
+
+	if [ "$set_temp" = yes ]; then
+		TEMP="$XP_TEMP"
+		TMPDIR="$TEMP"
+	elif [ -z "$TEMP" ] && [ ! -z "$TMPDIR" ]; then
+		TEMP="$TMPDIR"
+	elif [ -a "$TMPDIR" ] && [ ! -z "$TEMP" ]; then
+		TMPDIR="$TEMP"
 	fi
 
 	unset auto_temp set_temp
@@ -58,6 +97,8 @@ fi
 
 
 # Terminal Colors {{{1
+#
+#
 
 [ -z "$XP_COLORS" ] && export XP_COLORS='256color'
 
