@@ -11,44 +11,23 @@
 #	ff:		Line endings should always be <NL> (line feed #09).
 #	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 #
-# All CrossPlatform constants begin with "XP_".
-#	Bidirectional:
-#		XP_FOLDER		The name of the CrossPlatform shell script directory.
-#		
-#	In:
-#		XP_COLOR		The number of colors to use for the terminal.  Defaults to 256color.  Customarily valid options are 8color, 16color,
-#						and 256color.  Most modern xterm-compatible terminals support 256 colors.
-#		XP_NO_COLOR		If set, prevents a color prefix from being appended to $TERM.
-#		XP_FORCE_COLOR	If set, force setting of terminal colors, even if the number of colors is already specified.
-#		XP_NO_TEMP		If set, don't change $TEMP et al.
-#		XP_TEMP			If set, uses the given temporary directory.
 
+# Prompts {{{1
+if [ -z "$XP_NO_COLOR_PS" ]
+	PS1='\[\e[0m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[0m\]@\[\e[32m\]\h\[\e[0m\]:\[\e[34m\]\W\[\e[0m\]]\[\e[31m\]\$\[\e[0m\] '
+else
+	# Use one escape code to reset formatting, even though we aren't using color.
+	PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}\u@\h:\W]\$ '
+fi
 
-# Require Interactive {{{1
-#
-#
+# Command History {{{1
+HISTSIZE=1024
+HISTFILESIZE=4096
 
-[ -z "$PS1" ] && return
+# Don't put lines starting with space or duplicates in history.
+HISTCONTROL=ignoreboth
 
-
-# Initialize CrossPlatform Constants {{{1
-#
-#
-
-[ -z "$XP_FOLDER" ] && export XP_FOLDER="$(cd "$(dirname "${BASH_PATH[0]}")" && pwd)"
-
-
-# Shell Options {{{1
-#
-#
-
-
-
-# Initialize Global Constants {{{1
-#
-#
-
-# Temporary Directory {{{2
+# Temporary Directory {{{1
 if [ -z "$XP_NO_TEMP" ]; then
 	if [ -z "$XP_TEMP" ]; then
 		auto_temp=yes
@@ -95,13 +74,8 @@ if [ -z "$XP_NO_TEMP" ]; then
 	unset auto_temp set_temp
 fi
 
-
 # Terminal Colors {{{1
-#
-#
-
 [ -z "$XP_COLORS" ] && export XP_COLORS='256color'
-
 if [ -z "$XP_NO_COLOR" ]; then
 	case "$TERM" in
 		*-color)
