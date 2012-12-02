@@ -13,9 +13,12 @@
 #
 
 
-# bashrc.d Scripts {{{1
+# grep {{{1
 #
 #
 
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+# egrep and fgrep are deprecated; might as well add rgrep, too.
+alias egrep='grep -E'
+alias fgrep='grep -F'
+alias rgrep='grep -r'
 

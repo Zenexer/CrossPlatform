@@ -13,9 +13,14 @@
 #
 
 
-# bashrc.d Scripts {{{1
+# Prompts {{{1
 #
 #
 
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+if [ -z "$XP_NO_COLOR_PS" ]; then
+	export PS1='\[\e[0m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[0m\]@\[\e[32m\]\h\[\e[0m\]:\[\e[34m\]\W\[\e[0m\]]\[\e[31m\]\$\[\e[0m\] '
+else
+	# Use one escape code to reset formatting, even though we aren't using color.
+	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}\u@\h:\W]\$ '
+fi
 

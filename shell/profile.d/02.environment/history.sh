@@ -13,9 +13,13 @@
 #
 
 
-# bashrc.d Scripts {{{1
+# Command History {{{1
 #
 #
 
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+HISTSIZE=1024
+HISTFILESIZE=4096
+
+# Don't put lines starting with space or duplicates in history.
+HISTCONTROL=ignoreboth
 

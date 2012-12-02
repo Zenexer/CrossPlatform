@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -13,9 +13,11 @@
 #
 
 
-# bashrc.d Scripts {{{1
+# Bourne-Again Shell {{{1
 #
 #
 
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+if [ -n "$BASH" ]; then
+	[ -x "$XP_PATH/bashrc.sh" ] && . "$XP_PATH/bashrc.sh"
+fi
 

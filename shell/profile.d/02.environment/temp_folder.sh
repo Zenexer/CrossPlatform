@@ -12,22 +12,11 @@
 #	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 #
 
-# Prompts {{{1
-if [ -z "$XP_NO_COLOR_PS" ]; then
-	export PS1='\[\e[0m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[0m\]@\[\e[32m\]\h\[\e[0m\]:\[\e[34m\]\W\[\e[0m\]]\[\e[31m\]\$\[\e[0m\] '
-else
-	# Use one escape code to reset formatting, even though we aren't using color.
-	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}\u@\h:\W]\$ '
-fi
 
-# Command History {{{1
-HISTSIZE=1024
-HISTFILESIZE=4096
+# Temporary Folder {{{1
+#
+#
 
-# Don't put lines starting with space or duplicates in history.
-HISTCONTROL=ignoreboth
-
-# Temporary Directory {{{1
 if [ -z "$XP_NO_TEMP" ]; then
 	if [ -z "$XP_TEMP" ]; then
 		auto_temp=yes
@@ -72,23 +61,5 @@ if [ -z "$XP_NO_TEMP" ]; then
 	fi
 
 	unset auto_temp set_temp
-fi
-
-# Terminal Colors {{{1
-[ -z "$XP_COLORS" ] && export XP_COLORS='256color'
-if [ -z "$XP_NO_COLOR" ]; then
-	case "$TERM" in
-		*-color)
-			export TERM="${TERM%-color}-${XP_COLOR}"
-			;;
-
-		*-8color | *-16color | *-256color)
-			[ -n "$XP_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
-			;;
-
-		*)
-			export TERM="${TERM}-${XP_COLOR}"
-			;;
-	esac
 fi
 

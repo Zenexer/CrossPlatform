@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -13,9 +13,10 @@
 #
 
 
-# bashrc.d Scripts {{{1
-#
-#
-
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+function prepend_path # {{{1
+{
+	if ! eval test -z "\"\${$1##*:$2:*}\"" -o -z "\"\${$1%%*:$2}\"" -o -z "\"\${$1##$2:*}\"" -o -z "\"\${$1##$2}\""; then
+		eval "export $1=$2:\$$1"
+	fi
+}
 

@@ -13,9 +13,24 @@
 #
 
 
-# bashrc.d Scripts {{{1
+# Terminal Colors {{{1
 #
 #
 
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+[ -z "$XP_COLORS" ] && export XP_COLORS='256color'
+if [ -z "$XP_NO_COLOR" ]; then
+	case "$TERM" in
+		*-color)
+			export TERM="${TERM%-color}-${XP_COLOR}"
+			;;
+
+		*-8color | *-16color | *-256color)
+			[ -n "$XP_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
+			;;
+
+		*)
+			export TERM="${TERM}-${XP_COLOR}"
+			;;
+	esac
+fi
 

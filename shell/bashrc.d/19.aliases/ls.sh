@@ -12,12 +12,11 @@
 #	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 #
 
-# egrep and fgrep are deprecated; might as well add rgrep, too.
-alias egrep='grep -E'
-alias fgrep='grep -F'
-alias rgrep='grep -r'
 
-# Useful permutations of ls.
+# ls {{{1
+#
+#
+
 alias ll='ls -alF'
 alias la='ls -AF'
 alias l='ls -CF'
