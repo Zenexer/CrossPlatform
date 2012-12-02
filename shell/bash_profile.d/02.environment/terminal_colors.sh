@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -17,7 +17,7 @@
 #
 #
 
-[ -z "$XP_COLORS" ] && export XP_COLORS='256color'
+[ -z "$XP_COLORS" ] && export XP_COLOR='256color'
 if [ -z "$XP_NO_COLOR" ]; then
 	case "$TERM" in
 		*-color)
