@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+# THIS SHOULD BE /bin/bash so that the script runs under bash when being invoked directly.
 # Header Comments {{{1
-#
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8 tw=130
 #	ts:		Actual tab character stops.
 #	sw:		Indentation commands shift by this much.
@@ -30,12 +30,13 @@
 #		XP_NO_DIRCOLORS		Don't use dircolors.
 #
 
+
 # Initialization {{{1
 #
 #
 
 # XP_FOLDER
-[ -z "$XP_FOLDER" ] && export XP_FOLDER="$(cd "$(dirname "${BASH_PATH[0]}")" && pwd)"
+[ -z "$XP_FOLDER" ] && export XP_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ..  && pwd)"
 
 # XP_SCRIPT_FOLDER
 [ -z "$XP_SHELL_FOLDER" ] && export XP_SHELL_FOLDER="$XP_FOLDER/shell"
@@ -77,18 +78,18 @@ function source_folder # {{{2
 		IFS=''
 	fi
 
-	for level in {0..9}; do
-		[ ! -d "$1/$level" ] && continue;
+	for level in $1/0{0..9}.*; do
+		[ ! -d "$level" ] && continue;
 
-		for file in $1/0$level.*/*.sh; do
+		for file in $level/*.sh; do
 			[ -x "$file" ] && . "$file"
 		done
 	done
 
-	for level in {10..19}; do
-		[ ! -d "$1/$level" ] && continue;
+	for level in $1/{10..19}.*; do
+		[ ! -d "$level" ] && continue;
 
-		for file in $1/$level.*/*.sh; do
+		for file in $level/*.sh; do
 			[ -x "$file" ] && . "$file"
 		done
 	done
@@ -108,7 +109,7 @@ function source_folder # {{{2
 #
 #
 
-source_folder "$XP_PATH/profile.d"
+source_folder "$XP_SHELL_FOLDER/profile.d"
 
 
 # Bourne-Again Shell {{{1
@@ -116,6 +117,6 @@ source_folder "$XP_PATH/profile.d"
 #
 
 if [ -n "$BASH" ]; then
-	[ -x "$XP_PATH/bashrc.sh" ] && . "$XP_PATH/bashrc.sh"
+	[ -x "$XP_SHELL_FOLDER/bashrc.sh" ] && . "$XP_SHELL_FOLDER/bashrc.sh"
 fi
 

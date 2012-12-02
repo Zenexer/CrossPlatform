@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -13,24 +13,10 @@
 #
 
 
-# Terminal Colors {{{1
+# Bash Shell Options {{{1
 #
 #
 
-[ -z "$XP_COLORS" ] && export XP_COLORS='256color'
-if [ -z "$XP_NO_COLOR" ]; then
-	case "$TERM" in
-		*-color)
-			export TERM="${TERM%-color}-${XP_COLOR}"
-			;;
-
-		*-8color | *-16color | *-256color)
-			[ -n "$XP_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
-			;;
-
-		*)
-			export TERM="${TERM}-${XP_COLOR}"
-			;;
-	esac
-fi
+# Match recursively with **.
+shopt -s globstar
 

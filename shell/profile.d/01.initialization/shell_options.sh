@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -12,12 +12,14 @@
 #	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 #
 
+
+# Non-Bash Shell Options {{{1
+#
+#
+
 # Update window size after each command.
 shopt -s checkwinsize
 
 # Append to history file; don't overwrite it.
 shopt -s histappend
-
-# Match recursively with **.
-shopt -s globstar
 
