@@ -111,14 +111,16 @@
 
 		filetype plugin indent on					" Syntax-based automatic indentation.
 
-		" Don't exit visual mode when performing various operations.  (At least, re-enter it after exiting.)
-		" Shifting
-		vnoremap << <gv
-		vnoremap >> >gv
-		" Yoink/Plop
-		vnoremap y ygv
-		vnoremap p pgv
-		vnoremap P Pgv
+		" On second thought, I dislike this.  I end up Esc-ing back to normal more often.  It's easier to just use gv when I need
+		" it.
+		" " Don't exit visual mode when performing various operations.  (At least, re-enter it after exiting.)
+		" " Shifting
+		" vnoremap << <gv
+		" vnoremap >> >gv
+		" " Yoink/Plop
+		" vnoremap y ygv
+		" vnoremap p pgv
+		" vnoremap P Pgv
 
 	" Folding: Only the syntax fold settings.  Fold gutter goes under UI. {{{2
 		set nofoldenable							" Disable folding by default. zi to toggle.
@@ -130,7 +132,7 @@
 
 " Code Integration: Common language integration mechanisms, such as syntax highlighting. {{{1
 	set modeline									" Read vim settings from comments at top/bottom of file.
-	set modelines=15								" Leave enough room to put header comments before modelines; don't do this on purpose, though.
+	set modelines=15								" Leave enough room to put header comments before modelines; don't do that, though.
 
 	syntax enable									" Enable syntax highlighting and such.
 
