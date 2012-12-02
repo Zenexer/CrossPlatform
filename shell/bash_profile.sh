@@ -13,9 +13,9 @@
 #
 
 
-# bashrc.d Scripts {{{1
+# Sourced Scripts {{{1
 #
 #
 
-source_folder "$XP_SHELL_FOLDER/bashrc.d"
+source_folder "$XP_SHELL_FOLDER/bash_profile.d"
 

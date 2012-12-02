@@ -117,6 +117,6 @@ source_folder "$XP_SHELL_FOLDER/profile.d"
 #
 
 if [ -n "$BASH" ]; then
-	[ -x "$XP_SHELL_FOLDER/bashrc.sh" ] && . "$XP_SHELL_FOLDER/bashrc.sh"
+	[ -x "$XP_SHELL_FOLDER/bash_profile.sh" ] && . "$XP_SHELL_FOLDER/bash_profile.sh"
 fi
 
