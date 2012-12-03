@@ -35,10 +35,10 @@ if [ -z "$XP_NO_TEMP" ]; then
 		elif [ -d "$HOME/.tmp" -a -w "$HOME/.tmp" ]; then
 			XP_TEMP="$HOME/.tmp"
 			set_temp=yes
-		elif [ ! -e "$HOME/tmp" -a -d "$HOME" -w "$HOME" ]; then
+		elif [ ! -e "$HOME/tmp" -a -d "$HOME" -a -w "$HOME" ]; then
 			XP_TEMP="$HOME/tmp"
 			mkdir "$XP_TEMP" && set_temp=yes || set_temp=no
-		elif [ ! -e "$HOME/.tmp" -a -d "$HOME" -w "$HOME" ]; then
+		elif [ ! -e "$HOME/.tmp" -a -d "$HOME" -a -w "$HOME" ]; then
 			XP_TEMP="$HOME/.tmp"
 			mkdir "$XP_TEMP" && set_temp=yes || set_temp=no
 		elif [ -d '/tmp' -a -w '/tmp' ]; then
