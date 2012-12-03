@@ -20,7 +20,7 @@
 if [ -z "$XP_NO_TEMP" ]; then
 	if [ -z "$XP_TEMP" ]; then
 		auto_temp=yes
-	elif [ -e "$XP_TEMP" -d "$XP_TEMP" -w "$XP_TEMP" ]; then
+	elif [ -e "$XP_TEMP" -a -d "$XP_TEMP" -a -w "$XP_TEMP" ]; then
 		auto_temp=no
 	elif [ -e "$XP_TEMP" ]; then
 		auto_temp=yes
