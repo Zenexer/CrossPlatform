@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # THIS SHOULD BE /bin/bash so that the script runs under bash when being invoked directly.
 # Header Comments {{{1
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8 tw=130
