@@ -17,7 +17,16 @@
 #
 #
 
-if [ -n "$BASH" ]; then
-	[ -x "$XP_PATH/bashrc.sh" ] && . "$XP_PATH/bashrc.sh"
-fi
+case "$BASH" in
+	*/bash)
+		[ -x "$XP_PATH/bashrc.sh" ] && . "$XP_PATH/bashrc.sh"
+		;;
+
+	*/sh)
+		;;
+
+	*)
+		echo "\033[31mWarning: \$BASH has an unrecognized value of \"$BASH\".\033[0m"
+		;;
+esac
 

@@ -111,12 +111,3 @@ function source_folder # {{{2
 
 source_folder "$XP_SHELL_FOLDER/profile.d"
 
-
-# Bourne-Again Shell {{{1
-#
-#
-
-if [ -n "$BASH" ]; then
-	[ -x "$XP_SHELL_FOLDER/bash_profile.sh" ] && . "$XP_SHELL_FOLDER/bash_profile.sh"
-fi
-
