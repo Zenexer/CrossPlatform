@@ -17,10 +17,20 @@
 #
 #
 
+if whoami &> /dev/null; then
+	user='\u'
+elif [ -n "$UID" ]; then
+	user="$UID"
+else
+	user='unknown'
+fi
+
 if [ -z "$XP_NO_COLOR_PS" ]; then
-	export PS1='\[\e[0m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[0m\]@\[\e[32m\]\h\[\e[0m\]:\[\e[34m\]\W\[\e[0m\]]\[\e[31m\]\$\[\e[0m\] '
+	export PS1='\[\e[33m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]'$user'\[\e[33m\]@\[\e[35m\]\h \[\e[36m\]\W\[\e[33m\]]\[\e[31m\]\$\[\e[0m\] '
 else
 	# Use one escape code to reset formatting, even though we aren't using color.
-	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}\u@\h:\W]\$ '
+	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}'$user'@\h \W]\$ '
 fi
+
+unset user
 
