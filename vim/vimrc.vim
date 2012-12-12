@@ -16,6 +16,37 @@
 	set nocompatible								" Enable non-vi-compatible features by default.
 
 	scriptencoding utf-8							" This script is UTF-8 from here on.
+	
+
+" Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
+	function GetVimPath() " Gets the path to the vim executable. {{{2
+		let l:path = expand('$_')
+		
+		if l:path =~# 'vim$'
+			return l:path			" Use $_ environment variable (POSIX).
+		else
+			return 'vim'			" Attempt to use $PATH or %CD%.
+		endif
+	endfunction
+	
+	function GetNullDevice(prefix) " Gets the path to the null device. {{{2
+		if filewritable('/dev/null')
+			return a:prefix . '/dev/null'
+		elseif has('win32') || has('win64')
+			return a:prefix . 'NUL'
+		else
+			return ''
+		endif
+	endfunction
+	
+	function WriteAsSuperUser(file) " Write buffer to a:file as the super user (on POSIX, root). {{{2
+		exec '%write !sudo tee ' . shellescape(a:file, 1) . GetNullDevice(' >')
+		redraw!
+	endfunction
+
+	function IsCmdExe() " Determines whether running within Windows' cmd.exe or command.com. {{{2
+		return match('[\\/](cmd.exe|command.com)$', $COMSPEC)
+	endfunction
 
 
 " Platform Independence: Sets the same basic defaults on all platforms. {{{1
@@ -157,22 +188,29 @@
 	set number										" Line numbering.
 	set scrolloff=4									" Minimum number of lines to keep above/below cursor.
 	set display=lastline							" Don't replace screen-overflowing lines with '@@@@'...
-	set cursorline									" Underline the active row.    
 	set nottyfast									" Only redraw updated parts of the screen.
 	set showcmd										" Show info about last command/visual selection on bottom row.
-	set mouse=a										" Enable the mouse, with automatic mode determination, in all modes.
 	set history=1024								" Couldn't realistically use up this much history.
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
 	set foldcolumn=4								" Width of fold gutter.
 
 	colorscheme peachpuff							" Basic color scheme; UI section can modify this.
-	
+
 	" For use with :mkview; specifies what to save
 	set viewoptions=cursor,folds,options
 	if has('win32') || has('win64')
 		" unix:		Use <NL> only in :mkview script.  UNIX vim can't source non-UNIX scripts.
 		" slash:	Replace backslashes in file paths with forward slashes.
 		set viewoptions+=unix,slash
+	endif
+
+	" Specific to Windows' cmd.exe.
+	if IsCmdExe()
+		set nocursorline							" Looks horrible since cmd.exe doesn't support underline.
+		set mouse=									" No mouse support in cmd.exe
+	else
+		set cursorline								" Underline the line in which the cursor lies.
+		set mouse=a									" Enable the mouse, with automatic mode determination, in all modes.
 	endif
 
 
@@ -254,33 +292,6 @@
 
 		" Use :update instead of :write for ZZ.
 		nnoremap ZZ :update<CR>:quit<CR>
-	
-
-" Helper Functions: Used by user Ex commands. {{{1
-	function GetVimPath() " Gets the path to the vim executable. {{{2
-		let l:path = expand('$_')
-		
-		if l:path =~# 'vim$'
-			return l:path			" Use $_ environment variable (POSIX).
-		else
-			return 'vim'			" Attempt to use $PATH or %CD%.
-		endif
-	endfunction
-	
-	function GetNullDevice(prefix) " Gets the path to the null device. {{{2
-		if filewritable('/dev/null')
-			return a:prefix . '/dev/null'
-		elseif has('win32') || has('win64')
-			return a:prefix . 'NUL'
-		else
-			return ''
-		endif
-	endfunction
-	
-	function WriteAsSuperUser(file) " Write buffer to a:file as the super user (on POSIX, root). {{{2
-		exec '%write !sudo tee ' . shellescape(a:file, 1) . GetNullDevice(' >')
-		redraw!
-	endfunction
 
 
 " }}}1
