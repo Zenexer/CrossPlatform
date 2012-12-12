@@ -17,23 +17,29 @@
 #
 #
 
-[ -z "$XP_COLOR" ] && export XP_COLOR='256color'
-if [ -z "$XP_NO_COLOR" ]; then
-	case "$TERM" in
-		*-color)
-			export TERM="${TERM%-color}-${XP_COLOR}"
-			;;
+function make_color_alias
+{
+	if [ -z "$1" ]; then
+		echo $'\033[31mWarning: make_color_alias requires at least one argument.'
+		return
+	fi
 
-		*-8color | *-16color | *-256color)
-			[ -z "$XP_NO_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
-			;;
+	for i in $@; do
+		alias $i="$i --color=auto"
+	done
+}
 
-		xterm)
-			export TERM="xterm-$XP_COLOR"
-			;;
+if [ -z "$XP_NO_COLOR" ] && which 'dircolors' &> /dev/null; then
+	if [ -r ~/.dircolors ]; then
+		eval "`dircolors -b ~/.dircolors`"
+	elif [ -r "$XP_SHELL_FOLDER/dircolors" ]; then
+		eval "` dircolors -b "$XP_SHELL_FOLDER/dircolors"`"
+	else
+		eval "`dircolors -b`"
+	fi
 
-		*)
-			;;
-	esac
+	make_color_alias ls
+	make_color_alias dir vdir
+	make_color_alias grep fgrep egrep
 fi
 

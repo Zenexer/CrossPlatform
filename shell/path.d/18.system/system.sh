@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 prepend_path PATH "/usr/local/bin"
 prepend_path PATH "/usr/local/sbin"

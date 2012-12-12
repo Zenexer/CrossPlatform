@@ -19,8 +19,8 @@
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
-	function GetVimPath() " Gets the path to the vim executable. {{{2
-		let l:path = expand('$_')
+	function s:GetVimPath() " Gets the path to the vim executable. {{{2
+		let l:path == expand('$_')
 		
 		if l:path =~# 'vim$'
 			return l:path			" Use $_ environment variable (POSIX).
@@ -29,7 +29,7 @@
 		endif
 	endfunction
 	
-	function GetNullDevice(prefix) " Gets the path to the null device. {{{2
+	function s:GetNullDevice(prefix) " Gets the path to the null device. {{{2
 		if filewritable('/dev/null')
 			return a:prefix . '/dev/null'
 		elseif has('win32') || has('win64')
@@ -40,12 +40,30 @@
 	endfunction
 	
 	function WriteAsSuperUser(file) " Write buffer to a:file as the super user (on POSIX, root). {{{2
-		exec '%write !sudo tee ' . shellescape(a:file, 1) . GetNullDevice(' >')
+		exec '%write !sudo tee ' . shellescape(a:file, 1) . s:GetNullDevice(' >')
 		redraw!
 	endfunction
 
-	function IsCmdExe() " Determines whether running within Windows' cmd.exe or command.com. {{{2
-		return match('[\\/](cmd.exe|command.com)$', $COMSPEC)
+	function s:IsCmdExe() " Determines whether running within Windows' cmd.exe or command.com. {{{2
+		" Unfortunately, we can't just test $COMSPEC, Cygwin keeps that as cmd.exe even through SSH.
+		if match('[\\/](cmd.exe|command.com)$', $COMSPEC) > 0 && match('^cygwin', $TERM) > 0
+			return 1
+		else
+			return 0
+		endif
+	endfunction
+
+	function ToggleMouse() " Toggle mouse support {{{2
+		if &mouse == ''
+			if !exists('s:default_mouse')
+				let s:default_mouse = 'a'
+			endif
+
+			let &mouse = s:default_mouse
+		else
+			let s:default_mouse = &mouse
+			set mouse=
+		endif
 	endfunction
 
 
@@ -205,7 +223,7 @@
 	endif
 
 	" Specific to Windows' cmd.exe.
-	if IsCmdExe()
+	if s:IsCmdExe()
 		set nocursorline							" Looks horrible since cmd.exe doesn't support underline.
 		set mouse=									" No mouse support in cmd.exe
 	else
@@ -213,6 +231,8 @@
 		set mouse=a									" Enable the mouse, with automatic mode determination, in all modes.
 	endif
 
+	" Mappings to toggle the mouse.
+	noremap <expr> <Leader>m ToggleMouse()
 
 	" Status Line: What the status line should look like. {{{2
 		if has('statusline')
