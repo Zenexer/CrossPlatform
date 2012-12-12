@@ -18,7 +18,7 @@ function prepend_path # {{{1
 	[ ! -d "$2" ] && return 2
 
 	if ! eval test -z "\"\${$1##*:$2:*}\"" -o -z "\"\${$1%%*:$2}\"" -o -z "\"\${$1##$2:*}\"" -o -z "\"\${$1##$2}\""; then
-		if [ -z "`eval "\$$1"`" ]; then
+		if [ -z "`eval "echo \$$1"`" ]; then
 			eval "export $1=\"$2\""
 		else
 			eval "export $1=\"$2:\${$1}\"" && return 0
