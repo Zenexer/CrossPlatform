@@ -17,7 +17,7 @@
 #
 #
 
-[ -z "$XP_COLORS" ] && export XP_COLOR='256color'
+[ -z "$XP_COLOR" ] && export XP_COLOR='256color'
 if [ -z "$XP_NO_COLOR" ]; then
 	case "$TERM" in
 		*-color)
