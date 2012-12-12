@@ -1,6 +1,6 @@
 #!/bin/bash
 
-prepend_path LD_LIBRARY_PATH '/usr/local/lib'
-prepend_path LD_LIBRARY_PATH '/usr/lib'
-prepend_path LD_LIBRARY_PATH '/lib'
+append_path LD_LIBRARY_PATH '/usr/local/lib'
+append_path LD_LIBRARY_PATH '/usr/lib'
+append_path LD_LIBRARY_PATH '/lib'
 
