@@ -35,20 +35,20 @@ function install_file # {{{2
 	if [ -e "$TARGET" ]; then
 		mv "$TARGET" "$BACKUP"
 		EXIT_CODE=$?
-		if ! $EXIT_CODE; then
-			echo "\033[31mCould not install '$INSTALL' to '$TARGET': unable to back up existing file.\033[0m"
+		if [ ! $EXIT_CODE ]; then
+			echo $"\033[31mCould not install '$INSTALL' to '$TARGET': unable to back up existing file.\033[0m"
 			return $EXIT_CODE
 		fi
 	fi
 
 	ln -s "$INSTALL" "$TARGET"
 	EXIT_CODE=$?
-	if $EXIT_CODE
-		echo "\033[32mInstalled '$INSTALL' to '$TARGET'.\033[0m"
+	if [ $EXIT_CODE ]; then
+		echo $"\033[32mInstalled '$INSTALL' to '$TARGET'.\033[0m"
 		return 0
 	fi
 
-	echo "\033[31mCould not install '$INSTALL' to '$TARGET': unable to make symbolic link.\033[0m"
+	echo $"\033[31mCould not install '$INSTALL' to '$TARGET': unable to make symbolic link.\033[0m"
 	return $EXIT_CODE
 }
 
@@ -71,8 +71,8 @@ function install_script # {{{2
 
 	mkdir "$FOLDER"
 	EXIT_CODE=$?
-	if $EXIT_CODE; then
-		echo "\033[31mCould not install '$INSTALL' to '$TARGET': unable to create folder '$FOLDER'.\033[0m"
+	if [ $EXIT_CODE ]; then
+		echo $"\033[31mCould not install '$INSTALL' to '$TARGET': unable to create folder '$FOLDER'.\033[0m"
 	fi
 
 	install_file "$INSTALL" "$TARGET" "$BACKUP"
@@ -84,4 +84,5 @@ function install_script # {{{2
 #
 
 install_script 'bashrc.sh' ~/.bashrc ~/bashrc.d
+install_file 'vimrc.vim' ~/.vimrc
 
