@@ -24,6 +24,6 @@ BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
 
 for f in "$BASHRC_FOLDER"/*; do
 	if [ -x "$f" ]; then
-		source "$f" || echo $"\033[31mbashrc script '$f' encountered an error. (Error code: $?)\033[0m"
+		source "$f" || echo $'\033[31m'"bashrc script '$f' encountered an error. (Error code: $?)"$'\033[0m'
 	fi
 done
