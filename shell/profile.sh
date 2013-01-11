@@ -54,26 +54,38 @@ if [ -z "$XP_CHROOT" ]; then
 	fi
 fi
 
-
 # Functions {{{1
 #
 #
 
-function append_path # {{{2
+# append_path {{{2
+append_path()
 {
+	if [ -z "$1" -o -z "$2" ]; then
+		echo "\033[31mError: append_path requires two parameters, neither of which can be empty.\033[0m"
+		return 2
+	fi
+
 	if ! eval test -z "\"\${$1##*:$2:*}\"" -o -z "\"\${$1%%*:$2}\"" -o -z "\"\${$1##$2:*}\"" -o -z "\"\${$1##$2}\""; then
 		eval "export $1=\$$1:$2"
 	fi
 }
 
-function prepend_path # {{{2
+# prepend_path {{{2
+prepend_path()
 {
+	if [ -z "$1" -o -z "$2" ]; then
+		echo "\033[31mError: prepend_path requires two parameters, neither of which can be empty.\033[0m"
+		return 2
+	fi
+
 	if ! eval test -z "\"\${$1##*:$2:*}\"" -o -z "\"\${$1%%*:$2}\"" -o -z "\"\${$1##$2:*}\"" -o -z "\"\${$1##$2}\""; then
 		eval "export $1=$2:\$$1"
 	fi
 }
 
-function source_folder # {{{2
+# source_folder {{{2
+source_folder()
 {
 	[ ! -d "$1" ] && return
 	

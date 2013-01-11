@@ -14,8 +14,7 @@
 #
 #
 
-XP_FOLDER="$(cd "$(dirname "$(readlink -fn "${BASH_SOURCE[0]}")")/.." && pwd)"
-BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
+export XP_FOLDER="$(cd "$(dirname "$(readlink -fn "${BASH_SOURCE[0]}")")/.." && pwd)"
 
 
 # Sourcing {{{1
@@ -26,9 +25,11 @@ BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
 [ -x "$XP_FOLDER/shell/profile.sh" ] && "$XP_FOLDER/shell/profile.sh"
 
 # ~/.bashrc.d {{{2
+BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
 for f in "$BASHRC_FOLDER"/*; do
 	if [ -x "$f" ]; then
 		source "$f" || echo $'\033[31m'"bashrc script '$f' encountered an error. (Error code: $?)"$'\033[0m'
 	fi
 done
+unset BASHRC_FOLDER
 

@@ -21,10 +21,12 @@ XP_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #
 #
 
-function install_file # {{{2
+
+# install_file {{{2
+install_file()
 {
 	TARGET="$2"
-	INSTALL="$XP_FOLDER/install/$1"
+	INSTALL="$XP_FOLDER/$1"
 
 	if [ -z "$3" ]; then
 		BACKUP="$TARGET.bak"
@@ -54,7 +56,8 @@ function install_file # {{{2
 	return $EXIT_CODE
 }
 
-function install_script # {{{2
+# install_script {{{2
+install_script()
 {
 	INSTALL="$1"
 	TARGET="$2"
@@ -83,11 +86,22 @@ function install_script # {{{2
 	install_file "$INSTALL" "$TARGET" "$BACKUP"
 }
 
+# make_folder {{{2
+make_folder()
+{
+	[ ! -e "$1" ] && mkdir -p "$1"
+}
+
 
 # Installation Manifest {{{1
 #
 #
 
-install_script 'bashrc.sh' ~/.bashrc ~/.bashrc.d
-install_file 'vimrc.vim' ~/.vimrc && echo $'\033[0mYou will need to restart your bash session before using vim.'
+make_folder ~/tmp
+make_folder ~/.swp
+make_folder ~/.backup
+make_folder ~/.undo
+
+install_script 'shell/bashrc.sh' ~/.bashrc ~/.bashrc.d
+install_file 'vim/vimrc.vim' ~/.vimrc && echo $'\033[0mYou will need to restart your bash session before using vim.'
 
