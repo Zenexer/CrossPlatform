@@ -84,6 +84,9 @@ install_script()
 	fi
 
 	install_file "$INSTALL" "$TARGET" "$BACKUP"
+	EXIT_CODE=$?
+	[ -e "$BACKUP" ] && chmod +x "$BACKUP"
+	exit $EXIT_CODE
 }
 
 # make_folder {{{2

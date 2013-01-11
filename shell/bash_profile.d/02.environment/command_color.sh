@@ -12,12 +12,11 @@
 #	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 #
 
-
 # Terminal Colors {{{1
 #
 #
 
-function make_color_alias
+make_color_alias()
 {
 	if [ -z "$1" ]; then
 		echo $'\033[31mWarning: make_color_alias requires at least one argument.'

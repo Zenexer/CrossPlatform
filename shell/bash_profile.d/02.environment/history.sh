@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -13,14 +13,13 @@
 #
 
 
-# Write tmux Configuration File {{{1
+# Command History {{{1
 #
 #
 
-if [ ! -e ~/.tmux.conf ]; then
-	cat > ~/.tmux.conf <<-EOD
-		source-file "\$XP_SHELL_FOLDER/tmux.conf"
+HISTSIZE=1024
+HISTFILESIZE=4096
 
-	EOD
-fi
+# Don't put lines starting with space or duplicates in history.
+HISTCONTROL=ignoreboth
 

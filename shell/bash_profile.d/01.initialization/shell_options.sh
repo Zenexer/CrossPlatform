@@ -13,10 +13,13 @@
 #
 
 
-# Bash Shell Options {{{1
+# Non-Bash Shell Options {{{1
 #
 #
 
-# Match recursively with **.
-shopt -s globstar
+# Update window size after each command.
+shopt -s checkwinsize
+
+# Append to history file; don't overwrite it.
+shopt -s histappend
 

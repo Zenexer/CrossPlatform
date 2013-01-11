@@ -21,9 +21,6 @@ export XP_FOLDER="$(cd "$(dirname "$(readlink -fn "${BASH_SOURCE[0]}")")/.." && 
 #
 #
 
-# $XP_FOLDER/shell/profile.sh {{{2
-[ -x "$XP_FOLDER/shell/profile.sh" ] && "$XP_FOLDER/shell/profile.sh"
-
 # ~/.bashrc.d {{{2
 BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
 for f in "$BASHRC_FOLDER"/*; do
@@ -32,4 +29,7 @@ for f in "$BASHRC_FOLDER"/*; do
 	fi
 done
 unset BASHRC_FOLDER
+
+# $XP_FOLDER/shell/profile.sh {{{2
+[ -x "$XP_FOLDER/shell/bash_profile.sh" ] && source "$XP_FOLDER/shell/bash_profile.sh"
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Header Comments {{{1
 #
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8
@@ -13,13 +13,14 @@
 #
 
 
-# Non-Bash Shell Options {{{1
+# Write tmux Configuration File {{{1
 #
 #
 
-# Update window size after each command.
-shopt -s checkwinsize
+if [ ! -e ~/.tmux.conf ]; then
+	cat > ~/.tmux.conf <<-EOD
+		source-file "\$XP_SHELL_FOLDER/tmux.conf"
 
-# Append to history file; don't overwrite it.
-shopt -s histappend
+	EOD
+fi
 
