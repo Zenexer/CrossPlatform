@@ -1,0 +1,57 @@
+# vim: ft=screen tw=79 ts=8 fdm=marker fmr={{{,}}}
+
+# Initialization {{{1
+#
+#
+
+startup_message off			# Stupid copyright page is stupid.
+defutf8 on					# Use UTF-8.
+vbell off					# No visual bell.
+autodetach on				# Automatically detach on SIGHUP.
+defscrollback 10240			# I like me a lot of scrollback.
+
+
+# User Isolation {{{1
+# Use byobu instead of screen as base filenames for interoperation with byobu.
+#
+
+# Each user has their own paste buffer.
+bufferfile "/var/run/screen/S-$USER/screen-exchange"
+
+# Each user has their own ssh-agent socket.
+setenv SSH_AUTH_SOCK "/var/run/screen/S-$USER/screen.ssh-agent"
+
+
+# terminfo/termcap {{{1
+#
+#
+
+# Disable alternate screen so that terminal's backbuffer works as expected.
+termcapinfo * 'ti@:te@'
+altscreen on
+
+# Allow 256 colors.
+termcapinfo * "Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm"
+defbce on					# Preserve background color.
+
+# If we wanted to make bold appear as brightly colored text:
+#attrcolor b '.I'
+
+
+# Window Management {{{1
+#
+#
+
+defmonitor on				# Update the status bar on window activity.
+activity '%n'				# Display the number of windows with activity.
+
+# Status Bars {{{2
+
+# Per-window: 
+caption always "%{= kw}%?%h%?%< %=$USER%? %u%?"
+
+# Per-screen:
+hardstatus alwayslastline "%{= kw}%-Lw%50L>%{= wk}%n*%f %t%{-}%+Lw%< %=%{= yk}%l%{-} $USER@%H"
+
+#EOF
+

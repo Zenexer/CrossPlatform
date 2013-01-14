@@ -107,4 +107,4 @@ make_folder ~/.undo
 
 install_script 'shell/bashrc.sh' ~/.bashrc ~/.bashrc.d
 install_file 'vim/vimrc.vim' ~/.vimrc && echo $'\033[0mYou will need to restart your bash session before using vim.'
-
+install_file 'config/screenrc.screen' ~/.screenrc
