@@ -24,9 +24,7 @@ export XP_FOLDER="$(cd "$(dirname "$(readlink -fn "${BASH_SOURCE[0]}")")/.." && 
 # ~/.bashrc.d {{{2
 BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
 for f in "$BASHRC_FOLDER"/*; do
-	if [ -x "$f" ]; then
-		source "$f" || echo $'\033[31m'"bashrc script '$f' encountered an error. (Error code: $?)"$'\033[0m'
-	fi
+	[ -x "$f" ] && source "$f"
 done
 unset BASHRC_FOLDER
 
