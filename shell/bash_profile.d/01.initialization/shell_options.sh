@@ -13,7 +13,7 @@
 #
 
 
-# Non-Bash Shell Options {{{1
+# Shell Options {{{1
 #
 #
 
@@ -22,4 +22,7 @@ shopt -s checkwinsize
 
 # Append to history file; don't overwrite it.
 shopt -s histappend
+
+# Allow globstar (**).
+shopt -s globstar
 
