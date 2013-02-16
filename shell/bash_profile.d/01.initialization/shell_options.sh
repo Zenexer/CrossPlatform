@@ -26,3 +26,8 @@ shopt -s histappend
 # Allow globstar (**).
 shopt -s globstar
 
+# Store multi-line commands in single history entries.
+shopt -s cmdhist
+
+# Allow pattern lists in pathname expansion, such as ?(...|...)
+shopt -s extglob
