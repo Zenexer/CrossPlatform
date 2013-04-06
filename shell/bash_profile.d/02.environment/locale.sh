@@ -23,8 +23,8 @@
 [ -z "$XP_LOCALE_ENCODING" ] && export XP_LOCALE_ENCODING='UTF-8'
 
 [ -z "$XP_LANG" ] && export XP_LOCALE="${XP_LOCALE}.${XP_LOCALE_ENCODING}"
-[ -z "$XP_NO_LANG" ] && export LANG="$XP_LANG"
+[ -z "$XP_NO_LANG" -a -z "$LANG" ] && export LANG="$XP_LANG"
 
 [ -z "$XP_SUPPORTED" ] && export XP_SUPPORTED="${XP_LANG}:${XP_LOCALE}:${XP_LOCALE_PRIMARY}"
-[ -z "$XP_NO_SUPPORTED" ] && export SUPPORTED="$XP_SUPPORTED"
+[ -z "$XP_NO_SUPPORTED" -a -z "$SUPPORTED" ] && export SUPPORTED="$XP_SUPPORTED"
 
