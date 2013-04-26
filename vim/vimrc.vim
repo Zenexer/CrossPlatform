@@ -310,9 +310,5 @@
 		
 	" Normal Mode: {{{2
 
-		" Use :update instead of :write for ZZ.
-		nnoremap ZZ :update<CR>:quit<CR>
-
-
 " }}}1
 " EOF
