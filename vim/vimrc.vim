@@ -12,10 +12,13 @@
 	"	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 	"	tw:		Maximum width of a line before it gets wrapped.
 	
-" Initialization: Standardize the options and set the right encoding. {{{1
+" Initialization: Standardize options/encoding and set up environment. {{{1
 	set nocompatible								" Enable non-vi-compatible features by default.
 
 	scriptencoding utf-8							" This script is UTF-8 from here on.
+
+	let s:vimdir=expand('<sfile>:p:h') . '/'
+	let s:vimfile=expand('<sfile>:p') . '/'
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
@@ -303,12 +306,23 @@
 	command WQ wq
 	command WN wn
 
+
 " Mappings: Keyboard shortcuts. {{{1
 	" Visual And Select Modes: {{{2
 	
 	" Insert Mode: {{{2
 		
 	" Normal Mode: {{{2
+
+
+" Include: Primarily bundles. {{{1
+	" Vundle: {{{2
+		set rtp+=s:vimdir . 'vundle'
+		exe vundle#rc(s:vimdir . 'bundle')
+
+	" Bundles: {{{2
+		Bundle 'solarized'
+
 
 " }}}1
 " EOF
