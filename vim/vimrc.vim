@@ -215,7 +215,7 @@
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
 	set foldcolumn=4								" Width of fold gutter.
 
-	colorscheme peachpuff							" Basic color scheme; UI section can modify this.
+	colorscheme desert								" Basic color scheme; UI section can modify this.
 
 	" For use with :mkview; specifies what to save
 	set viewoptions=cursor,folds,options
