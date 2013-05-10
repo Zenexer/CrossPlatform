@@ -17,8 +17,7 @@
 
 	scriptencoding utf-8							" This script is UTF-8 from here on.
 
-	let s:vimdir=expand('<sfile>:p:h') . '/'
-	let s:vimfile=expand('<sfile>:p') . '/'
+	let s:vimdir=$XP_FOLDER . '/vim/'
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
@@ -215,7 +214,8 @@
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
 	set foldcolumn=4								" Width of fold gutter.
 
-	colorscheme desert								" Basic color scheme; UI section can modify this.
+	colorscheme desert								" Basic color scheme.  Normally overridden by bundles.
+	set background=dark
 
 	" For use with :mkview; specifies what to save
 	set viewoptions=cursor,folds,options
@@ -317,11 +317,21 @@
 
 " Include: Primarily bundles. {{{1
 	" Vundle: {{{2
-		set rtp+=s:vimdir . 'vundle'
+		let &rtp.=&rtp . ',' . escape(s:vimdir . 'vundle', ',\')
 		exe vundle#rc(s:vimdir . 'bundle')
 
 	" Bundles: {{{2
-		Bundle 'solarized'
+		" solarized: {{{3
+			Bundle 'solarized'
+
+			set t_Co=256
+
+			if empty($SOLARIZED) || $SOLARIZED == 0
+				let g:solarized_termcolors=256
+			endif
+
+			colorscheme solarized
+			set background=dark
 
 
 " }}}1
