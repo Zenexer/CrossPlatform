@@ -38,9 +38,9 @@ install_file()
 		mv "$TARGET" "$BACKUP"
 		EXIT_CODE=$?
 		if [ $EXIT_CODE ]; then
-			echo $'\033[0m'"Moved original '$TARGET' to '$BACKUP'."
+			echo $'\e[0m'"Moved original '$TARGET' to '$BACKUP'."
 		else
-			echo $'\033[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\033[0m'
+			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\e[0m'
 			return $EXIT_CODE
 		fi
 	fi
@@ -48,11 +48,11 @@ install_file()
 	ln -s "$INSTALL" "$TARGET"
 	EXIT_CODE=$?
 	if [ $EXIT_CODE ]; then
-		echo $'\033[32m'"Linked '$TARGET' to '$INSTALL'."$'\033[0m'
+		echo $'\e[32m'"Linked '$TARGET' to '$INSTALL'."$'\e[0m'
 		return 0
 	fi
 
-	echo $'\033[31m'"Could not install '$INSTALL' to '$TARGET': unable to make symbolic link."$'\033[0m'
+	echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to make symbolic link."$'\e[0m'
 	return $EXIT_CODE
 }
 
@@ -77,9 +77,9 @@ install_script()
 	mkdir "$FOLDER"
 	EXIT_CODE=$?
 	if [ $EXIT_CODE ]; then
-		echo $'\033[0m'"Created '$FOLDER' to hold any pre-existing scripts."
+		echo $'\e[0m'"Created '$FOLDER' to hold any pre-existing scripts."
 	else
-		echo $'\033[31m'"Could not install '$INSTALL' to '$TARGET': unable to create folder '$FOLDER'."$'\033[0m'
+		echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to create folder '$FOLDER'."$'\e[0m'
 		return $EXIT_CODE
 	fi
 
@@ -100,11 +100,18 @@ make_folder()
 #
 #
 
+if [ $# -lt 1 ]; then
+	pushd "$XP_FOLDER" || exit $?
+	git submodule init
+	git submodule update
+	popd
+fi
+
 make_folder ~/tmp
 make_folder ~/.swp
 make_folder ~/.backup
 make_folder ~/.undo
 
 install_script 'shell/bashrc.sh' ~/.bashrc ~/.bashrc.d
-install_file 'vim/vimrc.vim' ~/.vimrc && echo $'\033[0mYou will need to restart your bash session before using vim.'
+install_file 'vim/vimrc.vim' ~/.vimrc && echo $'\e[mYou will need to restart your bash session before using vim.'
 install_file 'config/screenrc.screen' ~/.screenrc
