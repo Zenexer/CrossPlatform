@@ -18,13 +18,14 @@
 #
 
 [ -z "$XP_COLOR" ] && export XP_COLOR='256color'
+
 if [ -z "$XP_NO_COLOR" ]; then
 	case "$TERM" in
 		*-color)
 			export TERM="${TERM%-color}-${XP_COLOR}"
 			;;
 
-		*-8color | *-16color | *-256color)
+		*-8color | *-16color)
 			[ -z "$XP_NO_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
 			;;
 

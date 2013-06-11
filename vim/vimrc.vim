@@ -11,18 +11,25 @@
 	"	ff:		Line endings should always be <NL> (line feed #09).
 	"	fenc:	Should always be UTF-8; #! must be first bytes, so no BOM.
 	"	tw:		Maximum width of a line before it gets wrapped.
+
+" TODO Investigate these in help: 'digraph', 'timeoutlen', 'ttimeoutlen'
 	
-" Initialization: Standardize options/encoding and set up environment. {{{1
+" Initialization: Standardize options/encoding, set up environment. {{{1
 	set nocompatible								" Enable non-vi-compatible features by default.
 
-	scriptencoding utf-8							" This script is UTF-8 from here on.
+	scriptencoding utf-8							" This script is UTF-8.
 
-	let s:vimdir=$XP_FOLDER . '/vim/'
+	let s:vimdir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+	let s:solarized = str2nr($SOLARIZED)
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
+	function Null(trash) " A no-op.  Returns '' instead of 0 (the default), so as not to cause problems with <expr> mappings. {{{2
+		return ''
+	endfunction
+
 	function s:GetVimPath() " Gets the path to the vim executable. {{{2
-		let l:path == expand('$_')
+		let l:path = $_
 		
 		if l:path =~# 'vim$'
 			return l:path			" Use $_ environment variable (POSIX).
@@ -55,8 +62,12 @@
 		endif
 	endfunction
 
+	function s:AppendRtp(dir) " Append a:dir, a folder in s:vimdir, to &runtimepath.  Assumes that a:dir is raw (net yet escaped). {{{2
+		let &runtimepath .= ',' . escape(s:vimdir . '/' . a:dir, '\,')
+	endfunction
+
 	function ToggleMouse() " Toggle mouse support {{{2
-		if &mouse == ''
+		if empty(&mouse)
 			if !exists('s:default_mouse')
 				let s:default_mouse = 'a'
 			endif
@@ -78,10 +89,13 @@
 		set fileformats=unix,dos,mac				" Default to LF line endings for new files, but recognize all line endings.
 		set fileencodings=ucs-bom,utf-8,latin1		" Default to UCS if BOM is set.  If UCS and UTF-8 error out, fallback to latin1.
 		setglobal fileencoding=utf-8				" Default to utf-8 without BOM for new files, so as to preserve magic numbers, such as "#!".
+		
+		set delcombine								" For combined characters, only delete one character at a time.
 
 
 	" Universal: Set the same values across all platforms that might otherwise vary. {{{2
 		set backspace=indent,eol,start				" Some implementations don't have this as the default.
+
 
 		let mapleader="\\"							" Used in place of <Leader>.
 
@@ -159,19 +173,9 @@
 		set softtabstop=4							" When inserting, insert spacechars so as to stop # columns.
 		set shiftwidth=4							" Number of columns by which to indent with shift commands.
 		set shiftround								" Round existing indentation upon reindentation.
+		set copyindent								" Copy previous line's tab/space combination.
 
 		filetype plugin indent on					" Syntax-based automatic indentation.
-
-		" On second thought, I dislike this.  I end up Esc-ing back to normal more often.  It's easier to just use gv when I need
-		" it.
-		" " Don't exit visual mode when performing various operations.  (At least, re-enter it after exiting.)
-		" " Shifting
-		" vnoremap << <gv
-		" vnoremap >> >gv
-		" " Yoink/Plop
-		" vnoremap y ygv
-		" vnoremap p pgv
-		" vnoremap P Pgv
 
 	" Folding: Only the syntax fold settings.  Fold gutter goes under UI. {{{2
 		set nofoldenable							" Disable folding by default. zi to toggle.
@@ -198,7 +202,7 @@
 		" Autocomplete based on syntax highlighting for uncustomized files.
 		if has('autocmd') && exists("+omnifunc")
 			autocmd Filetype *
-				\	if &omnifunc == '' |
+				\	if empty(&omnifunc) |
 				\		setlocal omnifunc=syntaxcomplete#Complete |
 				\	endif
 		endif
@@ -213,6 +217,10 @@
 	set history=1024								" Couldn't realistically use up this much history.
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
 	set foldcolumn=4								" Width of fold gutter.
+	
+	if has('extra_search')
+		set hlsearch								" Highlight matched searches.  Use <C-\>/ or \/ to clear.
+	endif
 
 	colorscheme desert								" Basic color scheme.  Normally overridden by bundles.
 	set background=dark
@@ -231,11 +239,9 @@
 		set mouse=									" No mouse support in cmd.exe
 	else
 		set cursorline								" Underline the line in which the cursor lies.
-		set mouse=a									" Enable the mouse, with automatic mode determination, in all modes.
+		let s:default_mouse = 'a'					" Enable the mouse, with automatic mode determination, in all modes.
+		let &mouse = s:default_mouse
 	endif
-
-	" Mappings to toggle the mouse.
-	noremap <expr> <Leader>m ToggleMouse()
 
 	" Status Line: What the status line should look like. {{{2
 		if has('statusline')
@@ -254,35 +260,11 @@
 		endif
 	
 	" Windows And Tabs: Windows, tabs, and buffers. {{{2
-		set hidden					" Enable hidden buffers.
+		set hidden									" Enable hidden buffers.
 		
 		if has('windows')
 			set showtabline=2						" Always show tabs.
 			set switchbuf=usetab,split				" Try to use an existing tab.  Compile errors go in split windows.
-
-			" Move easily between panes with Ctrl + DirectionalLetter and Ctrl + Arrow.
-			" <C-L> normally redraws the screen in normal mode.  Use :redraw instead.
-			" <C-K> normally inserts the next key in <> notation.  Use <C-,> instead.
-			" For digraphs, use {char1} <BS> {char2} (intrinsic feature).
-			noremap <C-K> <C-W>k
-			noremap <C-J> <C-W>j
-			noremap <C-H> <C-W>h
-			noremap <C-L> <C-W>l
-			noremap <C-Up> <C-W>k
-			noremap <C-Down> <C-W>j
-			noremap <C-Left> <C-W>h
-			noremap <C-Right> <C-W>l
-			noremap! <C-K> <C-W>k
-			noremap! <C-J> <C-W>j
-			noremap! <C-H> <C-W>h
-			noremap! <C-L> <C-W>l
-			noremap! <C-Up> <C-W>k
-			noremap! <C-Down> <C-W>j
-			noremap! <C-Left> <C-W>h
-			noremap! <C-Right> <C-W>l
-			" Replace <C-K>.
-			noremap <C-,> <C-K>
-			noremap! <C-,> <C-K>
 		endif
 
 
@@ -308,31 +290,98 @@
 
 
 " Mappings: Keyboard shortcuts. {{{1
-	" Visual And Select Modes: {{{2
-	
-	" Insert Mode: {{{2
+	" Windows: Move easily between panes with Ctrl + Arrow. {{{2
+		noremap <C-Up> <C-W><Up>
+		noremap <C-Down> <C-W><Down>
+		noremap <C-Left> <C-W><Left>
+		noremap <C-Right> <C-W><Right>
 		
-	" Normal Mode: {{{2
+		noremap! <C-Up> <C-W><Up>
+		noremap! <C-Down> <C-W><Down>
+		noremap! <C-Left> <C-W><Left>
+		noremap! <C-Right> <C-W><Right>
+		
+	" Line Navigation: Move one visual line at a time, instead of one file line. {{{2
+		vnoremap <silent> j gj
+		vnoremap <silent> <Down> g<Down>
+		vnoremap <silent> k gk
+		vnoremap <silent> <Up> g<Up>
+		
+		inoremap <silent> <Down> <C-\><C-o>g<Down>
+		inoremap <silent> <Up> <C-\><C-o>g<Up>
+
+	" Mouse Toggle: Use <C-\>m or \m to toggle mouse support. {{{2
+	" For custom mappings, map to: <SID>CrossPlatform-ToggleMouse
+		noremap <expr><unique> <SID>CrossPlatform-ToggleMouse Null(ToggleMouse())
+		noremap! <expr><unique> <SID>CrossPlatform-ToggleMouse Null(ToggleMouse())
+
+		map <unique> <C-\>m <SID>CrossPlatform-ToggleMouse
+		map! <unique> <C-\>m <SID>CrossPlatform-ToggleMouse
+		nmap <unique> <Leader>m <SID>CrossPlatform-ToggleMouse
+		vmap <unique> <Leader>m <SID>CrossPlatform-ToggleMouse
+
+	" Line Duplication: Use <C-d>, <C-\>d, \d to duplicate a line. {{{2
+	" For custom mappings, map to: <SID>CrossPlatform-Duplicate
+		if empty(mapcheck('<SID>CrossPlatform-Duplicate'))
+			noremap <unique> <SID>CrossPlatform-Duplicate :copy .<CR>
+			noremap! <unique><script> <SID>CrossPlatform-Duplicate <C-\><C-o><SID>CrossPlatform-Duplicate
+			vunmap <SID>CrossPlatform-Duplicate
+			vnoremap <unique> <SID>CrossPlatform-Duplicate :'<,'>copy '><CR>
+
+			vmap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
+			vmap <unique><script> <Leader>d <SID>CrossPlatform-Duplicate
+			vmap <script> <C-d> <SID>CrossPlatform-Duplicate
+
+			nmap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
+			nmap <unique><script> <Leader>d <SID>CrossPlatform-Duplicate
+			nmap <script> <C-d> <SID>CrossPlatform-Duplicate
+
+			imap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
+			imap <script> <C-d> <SID>CrossPlatform-Duplicate
+		endif
+
+	" Clear Search Highlighting: Use <C-\>/ or \f to clear search highlighting. {{{2
+	" For custom mappings, map to: <SID>CrossPlatform-ClearSearch
+		noremap <unique> <SID>CrossPlatform-ClearSearch :nohlsearch<CR>
+		noremap! <unique> <SID>CrossPlatform-ClearSearch <SID>CrossPlatform-ClearSearch
+
+		map <unique><script> <C-\>f <SID>CrossPlatform-ClearSearch
+		map <unique><script> <Leader>f <SID>CrossPlatform-ClearSearch
+
+		map! <unique><script> <C-\>f <SID>CrossPlatform-ClearSearch
 
 
 " Include: Primarily bundles. {{{1
+	
 	" Vundle: {{{2
-		let &rtp.=&rtp . ',' . escape(s:vimdir . 'vundle', ',\')
-		exe vundle#rc(s:vimdir . 'bundle')
+		call s:AppendRtp('vundle')
+		call vundle#rc(s:vimdir . '/bundle')
 
 	" Bundles: {{{2
-		" solarized: {{{3
-			Bundle 'solarized'
+		" Solarized: {{{3
+			" $SOLARIZED: Bitmask; default: 0
+			" 0 0 0 0
+			" | | | |
+			" | | | +-- Disable solarized
+			" | | +---- Do not force 256 colors
+			" | +------ Use light theme
+			" +-------- Reserved; must be 0
+			if and($SOLARIZED, 1) == 0
+				Bundle 'solarized'
 
-			set t_Co=256
+				if and($SOLARIZED, 2) == 0
+					let g:solarized_termcolors=256
+					set t_Co=256
+				endif
 
-			if empty($SOLARIZED) || $SOLARIZED == 0
-				let g:solarized_termcolors=256
+				colorscheme solarized
+
+				if and($SOLARIZED, 4) == 0
+					set background=dark
+				else
+					set background=light
+				endif
 			endif
-
-			colorscheme solarized
-			set background=dark
-
 
 " }}}1
 " EOF
