@@ -1,4 +1,4 @@
 #!/bin/bash
 
-SOLARIZED=0 "$@" || exit $?
+SOLARIZED=2 "$@" || exit $?
 
