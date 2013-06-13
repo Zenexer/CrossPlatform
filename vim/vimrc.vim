@@ -340,15 +340,24 @@
 			imap <script> <C-d> <SID>CrossPlatform-Duplicate
 		endif
 
-	" Clear Search Highlighting: Use <C-\>/ or \f to clear search highlighting. {{{2
+	" Clear Search Highlighting: Use <C-/>, <C-\>/, or \/ to clear search highlighting. {{{2
+	" <C-/> is typically sent as <C-_>, and will only be available if &allowrevins is disabled.
 	" For custom mappings, map to: <SID>CrossPlatform-ClearSearch
 		noremap <unique> <SID>CrossPlatform-ClearSearch :nohlsearch<CR>
 		noremap! <unique> <SID>CrossPlatform-ClearSearch <SID>CrossPlatform-ClearSearch
 
-		map <unique><script> <C-\>f <SID>CrossPlatform-ClearSearch
-		map <unique><script> <Leader>f <SID>CrossPlatform-ClearSearch
+		map <unique><script> <C-\>/ <SID>CrossPlatform-ClearSearch
+		map <unique><script> <Leader>/ <SID>CrossPlatform-ClearSearch
+		map <script> <C-/> <SID>CrossPlatform-ClearSearch
 
-		map! <unique><script> <C-\>f <SID>CrossPlatform-ClearSearch
+		map! <unique><script> <C-\>/ <SID>CrossPlatform-ClearSearch
+
+		map <script> <C-/> <SID>CrossPlatform-ClearSearch
+		map! <script> <C-/> <SID>CrossPlatform-ClearSearch
+		if !(has('rightleft') && &allowrevins)
+			map <script> <C-_> <SID>CrossPlatform-ClearSearch
+			map! <script> <C-_> <SID>CrossPlatform-ClearSearch
+		endif
 
 
 " Include: Primarily bundles. {{{1
@@ -363,20 +372,23 @@
 			" 0 0 0 0
 			" | | | |
 			" | | | +-- Disable solarized
-			" | | +---- Do not force 256 colors
+			" | | +---- Force compatibility with non-Solarized terminal palettes
 			" | +------ Use light theme
 			" +-------- Reserved; must be 0
-			if and($SOLARIZED, 1) == 0
+			if and(s:solarized, 1) == 0
 				Bundle 'solarized'
 
-				if and($SOLARIZED, 2) == 0
+				if and(s:solarized, 2) == 1
 					let g:solarized_termcolors=256
 					set t_Co=256
+				else
+					let g:solarized_termcolors=16
+					set t_Co=16
 				endif
 
 				colorscheme solarized
 
-				if and($SOLARIZED, 4) == 0
+				if and(s:solarized, 4) == 0
 					set background=dark
 				else
 					set background=light
