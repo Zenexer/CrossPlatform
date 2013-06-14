@@ -306,6 +306,11 @@
 		vnoremap <silent> <Down> g<Down>
 		vnoremap <silent> k gk
 		vnoremap <silent> <Up> g<Up>
+
+		noremap <silent> j gj
+		noremap <silent> <Down> g<Down>
+		noremap <silent> k gk
+		noremap <silent> <Up> g<Up>
 		
 		inoremap <silent> <Down> <C-\><C-o>g<Down>
 		inoremap <silent> <Up> <C-\><C-o>g<Up>
@@ -315,48 +320,47 @@
 		noremap <expr><unique> <SID>CrossPlatform-ToggleMouse Null(ToggleMouse())
 		noremap! <expr><unique> <SID>CrossPlatform-ToggleMouse Null(ToggleMouse())
 
-		map <unique> <C-\>m <SID>CrossPlatform-ToggleMouse
-		map! <unique> <C-\>m <SID>CrossPlatform-ToggleMouse
-		nmap <unique> <Leader>m <SID>CrossPlatform-ToggleMouse
-		vmap <unique> <Leader>m <SID>CrossPlatform-ToggleMouse
+		noremap <script><unique> <C-\>m <SID>CrossPlatform-ToggleMouse
+		noremap! <script><unique> <C-\>m <SID>CrossPlatform-ToggleMouse
+		nnoremap <script><unique> <Leader>m <SID>CrossPlatform-ToggleMouse
+		vnoremap <script><unique> <Leader>m <SID>CrossPlatform-ToggleMouse
 
 	" Line Duplication: Use <C-d>, <C-\>d, \d to duplicate a line. {{{2
 	" For custom mappings, map to: <SID>CrossPlatform-Duplicate
-		if empty(mapcheck('<SID>CrossPlatform-Duplicate'))
-			noremap <unique> <SID>CrossPlatform-Duplicate :copy .<CR>
-			noremap! <unique><script> <SID>CrossPlatform-Duplicate <C-\><C-o><SID>CrossPlatform-Duplicate
-			vunmap <SID>CrossPlatform-Duplicate
-			vnoremap <unique> <SID>CrossPlatform-Duplicate :'<,'>copy '><CR>
+		noremap <unique> <SID>CrossPlatform-Duplicate :copy .<CR>
+		noremap! <script><unique> <SID>CrossPlatform-Duplicate <C-\><C-o><SID>CrossPlatform-Duplicate
+		vunmap <SID>CrossPlatform-Duplicate
+		" This gets turned into :'<'>copy '> because '<'> is automatically added after typing :.
+		vnoremap <script><unique> <SID>CrossPlatform-Duplicate :copy '><CR>
 
-			vmap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
-			vmap <unique><script> <Leader>d <SID>CrossPlatform-Duplicate
-			vmap <script> <C-d> <SID>CrossPlatform-Duplicate
+		vnoremap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
+		vnoremap <unique><script> <Leader>d <SID>CrossPlatform-Duplicate
+		vnoremap <script> <C-d> <SID>CrossPlatform-Duplicate
 
-			nmap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
-			nmap <unique><script> <Leader>d <SID>CrossPlatform-Duplicate
-			nmap <script> <C-d> <SID>CrossPlatform-Duplicate
+		nnoremap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
+		nnoremap <unique><script> <Leader>d <SID>CrossPlatform-Duplicate
+		nnoremap <script> <C-d> <SID>CrossPlatform-Duplicate
 
-			imap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
-			imap <script> <C-d> <SID>CrossPlatform-Duplicate
-		endif
+		inoremap <unique><script> <C-\>d <SID>CrossPlatform-Duplicate
+		inoremap <script> <C-d> <SID>CrossPlatform-Duplicate
 
 	" Clear Search Highlighting: Use <C-/>, <C-\>/, or \/ to clear search highlighting. {{{2
 	" <C-/> is typically sent as <C-_>, and will only be available if &allowrevins is disabled.
 	" For custom mappings, map to: <SID>CrossPlatform-ClearSearch
 		noremap <unique> <SID>CrossPlatform-ClearSearch :nohlsearch<CR>
-		noremap! <unique> <SID>CrossPlatform-ClearSearch <SID>CrossPlatform-ClearSearch
+		noremap! <script><unique> <SID>CrossPlatform-ClearSearch <C-\><C-o><SID>CrossPlatform-ClearSearch
 
-		map <unique><script> <C-\>/ <SID>CrossPlatform-ClearSearch
-		map <unique><script> <Leader>/ <SID>CrossPlatform-ClearSearch
-		map <script> <C-/> <SID>CrossPlatform-ClearSearch
+		noremap <unique><script> <C-\>/ <SID>CrossPlatform-ClearSearch
+		noremap <unique><script> <Leader>/ <SID>CrossPlatform-ClearSearch
+		noremap <script> <C-/> <SID>CrossPlatform-ClearSearch
 
-		map! <unique><script> <C-\>/ <SID>CrossPlatform-ClearSearch
+		noremap! <unique><script> <C-\>/ <SID>CrossPlatform-ClearSearch
 
-		map <script> <C-/> <SID>CrossPlatform-ClearSearch
-		map! <script> <C-/> <SID>CrossPlatform-ClearSearch
+		noremap <script> <C-/> <SID>CrossPlatform-ClearSearch
+		noremap! <script> <C-/> <SID>CrossPlatform-ClearSearch
 		if !(has('rightleft') && &allowrevins)
-			map <script> <C-_> <SID>CrossPlatform-ClearSearch
-			map! <script> <C-_> <SID>CrossPlatform-ClearSearch
+			noremap <script> <C-_> <SID>CrossPlatform-ClearSearch
+			noremap! <script> <C-_> <SID>CrossPlatform-ClearSearch
 		endif
 
 
