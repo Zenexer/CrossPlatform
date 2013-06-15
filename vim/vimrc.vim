@@ -20,7 +20,7 @@
 	scriptencoding utf-8							" This script is UTF-8.
 
 	let s:vimdir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-	let s:solarized = str2nr($SOLARIZED)
+	let g:solarized_flags = str2nr($SOLARIZED)
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
@@ -379,10 +379,8 @@
 			" | | +---- Force compatibility with non-Solarized terminal palettes
 			" | +------ Use light theme
 			" +-------- Reserved; must be 0
-			if and(s:solarized, 1) == 0
-				Bundle 'solarized'
-
-				if and(s:solarized, 2) == 1
+			if and(g:solarized_flags, 1) == 0
+				if and(g:solarized_flags, 2) != 0
 					let g:solarized_termcolors=256
 					set t_Co=256
 				else
@@ -390,9 +388,10 @@
 					set t_Co=16
 				endif
 
+				Bundle 'solarized'
 				colorscheme solarized
 
-				if and(s:solarized, 4) == 0
+				if and(g:solarized_flags, 4) == 0
 					set background=dark
 				else
 					set background=light
