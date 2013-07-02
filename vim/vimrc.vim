@@ -28,6 +28,14 @@
 		return ''
 	endfunction
 
+	function s:HasFlag(value, flag) " Tests if a number has a flag. {{{2
+		if exists('*and')
+			return and(a:value, a:flag) != 0
+		else
+			return a:value % (a:flag * 2) >= a:flag
+		end
+	endfunction
+
 	function s:GetVimPath() " Gets the path to the vim executable. {{{2
 		let l:path = $_
 		
@@ -365,7 +373,6 @@
 
 
 " Include: Primarily bundles. {{{1
-	
 	" Vundle: {{{2
 		call s:AppendRtp('vundle')
 		call vundle#rc(s:vimdir . '/bundle')
@@ -379,8 +386,8 @@
 			" | | +---- Force compatibility with non-Solarized terminal palettes
 			" | +------ Use light theme
 			" +-------- Reserved; must be 0
-			if and(g:solarized_flags, 1) == 0
-				if and(g:solarized_flags, 2) != 0
+			if !s:HasFlag(g:solarized_flags, 1)
+				if s:HasFlag(g:solarized_flags, 2)
 					let g:solarized_termcolors=256
 					set t_Co=256
 				else
@@ -391,7 +398,7 @@
 				Bundle 'solarized'
 				colorscheme solarized
 
-				if and(g:solarized_flags, 4) == 0
+				if !s:HasFlag(g:solarized_flags, 4)
 					set background=dark
 				else
 					set background=light
