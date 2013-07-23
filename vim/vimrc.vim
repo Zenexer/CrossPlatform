@@ -298,6 +298,10 @@
 
 
 " Mappings: Keyboard shortcuts. {{{1
+	" Repeat Substitute: Repeat the last substitution.  Unlike default, keep flags. {{{2
+		nnoremap & :&&<CR>
+		vnoremap & :s//~/&<CR>
+
 	" Windows: Move easily between panes with Ctrl + Arrow. {{{2
 		noremap <C-Up> <C-W><Up>
 		noremap <C-Down> <C-W><Down>
