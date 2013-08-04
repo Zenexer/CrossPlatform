@@ -17,7 +17,8 @@
 #
 #
 
-alias ll='ls -alF'
-alias la='ls -AF'
-alias l='ls -CF'
+alias ls='ls --color=auto -F'
+alias ll='ls -alh'
+alias la='ls -A'
+alias l='ls -C'
 

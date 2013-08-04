@@ -44,7 +44,8 @@ function source_dircolors
 if [ -z "$XP_NO_COLOR" ] && type 'dircolors' &> /dev/null; then
 	source_dircolors
 
-	make_color_alias ls
+	# We force --color for alias in 19.aliases, along with other flags.
+	#make_color_alias ls
 	make_color_alias dir vdir
 	make_color_alias grep fgrep egrep
 fi
