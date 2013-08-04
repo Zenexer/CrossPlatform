@@ -16,7 +16,7 @@
 #
 #
 
-make_color_alias()
+function make_color_alias
 {
 	if [ -z "$1" ]; then
 		echo $'\033[31mWarning: make_color_alias requires at least one argument.'
@@ -28,14 +28,21 @@ make_color_alias()
 	done
 }
 
-if [ -z "$XP_NO_COLOR" ] && which 'dircolors' &> /dev/null; then
-	if [ -r ~/.dircolors ]; then
-		eval "`dircolors -b ~/.dircolors`"
-	elif [ -r "$XP_SHELL_FOLDER/dircolors" ]; then
-		eval "` dircolors -b "$XP_SHELL_FOLDER/dircolors"`"
-	else
-		eval "`dircolors -b`"
-	fi
+function source_dircolors
+{
+	for f in ~/.dircolors "$XP_SHELL_FOLDER/dircolors/solarized/dircolors.ansi-dark"; do
+		if [ -r "$f" -a -f "$f" ]; then
+			eval "$(dircolors -b "$f")"
+			return $?
+		fi
+	done
+
+	eval "$(dircolors -b)"
+	return $?
+}
+
+if [ -z "$XP_NO_COLOR" ] && type 'dircolors' &> /dev/null; then
+	source_dircolors
 
 	make_color_alias ls
 	make_color_alias dir vdir
