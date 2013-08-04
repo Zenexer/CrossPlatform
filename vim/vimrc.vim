@@ -20,12 +20,20 @@
 	scriptencoding utf-8							" This script is UTF-8.
 
 	let s:vimdir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-	let s:solarized = str2nr($SOLARIZED)
+	let g:solarized_flags = str2nr($SOLARIZED)
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
 	function Null(trash) " A no-op.  Returns '' instead of 0 (the default), so as not to cause problems with <expr> mappings. {{{2
 		return ''
+	endfunction
+
+	function s:HasFlag(value, flag) " Tests if a number has a flag. {{{2
+		if exists('*and')
+			return and(a:value, a:flag) != 0
+		else
+			return a:value % (a:flag * 2) >= a:flag
+		end
 	endfunction
 
 	function s:GetVimPath() " Gets the path to the vim executable. {{{2
@@ -290,6 +298,10 @@
 
 
 " Mappings: Keyboard shortcuts. {{{1
+	" Repeat Substitute: Repeat the last substitution.  Unlike default, keep flags. {{{2
+		nnoremap & :&&<CR>
+		vnoremap & :s//~/&<CR>
+
 	" Windows: Move easily between panes with Ctrl + Arrow. {{{2
 		noremap <C-Up> <C-W><Up>
 		noremap <C-Down> <C-W><Down>
@@ -365,7 +377,6 @@
 
 
 " Include: Primarily bundles. {{{1
-	
 	" Vundle: {{{2
 		call s:AppendRtp('vundle')
 		call vundle#rc(s:vimdir . '/bundle')
@@ -379,10 +390,8 @@
 			" | | +---- Force compatibility with non-Solarized terminal palettes
 			" | +------ Use light theme
 			" +-------- Reserved; must be 0
-			if and(s:solarized, 1) == 0
-				Bundle 'solarized'
-
-				if and(s:solarized, 2) == 1
+			if !s:HasFlag(g:solarized_flags, 1)
+				if s:HasFlag(g:solarized_flags, 2)
 					let g:solarized_termcolors=256
 					set t_Co=256
 				else
@@ -390,9 +399,10 @@
 					set t_Co=16
 				endif
 
+				Bundle 'solarized'
 				colorscheme solarized
 
-				if and(s:solarized, 4) == 0
+				if !s:HasFlag(g:solarized_flags, 4)
 					set background=dark
 				else
 					set background=light
