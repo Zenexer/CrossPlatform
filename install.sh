@@ -113,5 +113,8 @@ make_folder ~/.backup
 make_folder ~/.undo
 
 install_script 'shell/bashrc.sh' ~/.bashrc ~/.bashrc.d
-install_file 'vim/vimrc.vim' ~/.vimrc && echo $'\e[mYou will need to restart your bash session before using vim.'
+install_file 'vim/vimrc.vim' ~/.vimrc
 install_file 'config/screenrc.screen' ~/.screenrc
+
+echo $'\e[31mLog in again or run: \e[msource ~/.bashrc'
+
