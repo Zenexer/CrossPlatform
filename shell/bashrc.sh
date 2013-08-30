@@ -16,7 +16,6 @@
 
 export XP_FOLDER="$(cd "$(dirname "$(readlink -fn "${BASH_SOURCE[0]}")")/.." && pwd)"
 
-
 # Sourcing {{{1
 #
 #

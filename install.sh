@@ -47,7 +47,7 @@ install_file()
 
 	ln -s "$INSTALL" "$TARGET"
 	EXIT_CODE=$?
-	if [ $EXIT_CODE ]; then
+	if ! (( $EXIT_CODE )); then
 		echo $'\e[32m'"Linked '$TARGET' to '$INSTALL'."$'\e[0m'
 		return 0
 	fi
