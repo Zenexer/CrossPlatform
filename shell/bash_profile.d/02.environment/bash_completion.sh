@@ -13,14 +13,15 @@
 #
 
 
-# Write tmux Configuration File {{{1
+# Bash Completion {{{1
 #
 #
 
-if [ ! -e ~/.tmux.conf ]; then
-	cat > ~/.tmux.conf <<-EOD
-		source-file "\$XP_SHELL_FOLDER/tmux.conf"
-
-	EOD
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
 fi
 

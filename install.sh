@@ -34,25 +34,28 @@ install_file()
 		BACKUP="$3"
 	fi
 
-	if [ -e "$TARGET" ]; then
-		mv "$TARGET" "$BACKUP"
-		EXIT_CODE=$?
+	if [ -h "$TARGET" ]; then
+		if ! rm -f "$TARGET"; then
+			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to remove old symbolic link."$'\e[m'
+			return 1
+		fi
+	elif [ -e "$TARGET" ]; then
+		mv "$TARGET" "$BACKUP" || EXIT_CODE=$?
 		if [ $EXIT_CODE ]; then
 			echo $'\e[0m'"Moved original '$TARGET' to '$BACKUP'."
 		else
-			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\e[0m'
+			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\e[m'
 			return $EXIT_CODE
 		fi
 	fi
 
-	ln -s "$INSTALL" "$TARGET"
-	EXIT_CODE=$?
+	ln -s "$INSTALL" "$TARGET" || EXIT_CODE=$?
 	if ! (( $EXIT_CODE )); then
-		echo $'\e[32m'"Linked '$TARGET' to '$INSTALL'."$'\e[0m'
+		echo $'\e[32m'"Linked '$TARGET' to '$INSTALL'."$'\e[m'
 		return 0
 	fi
 
-	echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to make symbolic link."$'\e[0m'
+	echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to make symbolic link."$'\e[m'
 	return $EXIT_CODE
 }
 
@@ -74,17 +77,17 @@ install_script()
 		BACKUP="$FOLDER/$4"
 	fi
 
-	mkdir "$FOLDER"
-	EXIT_CODE=$?
-	if [ $EXIT_CODE ]; then
-		echo $'\e[0m'"Created '$FOLDER' to hold any pre-existing scripts."
-	else
-		echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to create folder '$FOLDER'."$'\e[0m'
-		return $EXIT_CODE
+	if [ ! -d "$FOLDER" ]; then
+		mkdir "$FOLDER" || EXIT_CODE=$?
+		if ! (( $EXIT_CODE )); then
+			echo $'\e[0m'"Created '$FOLDER' to hold any pre-existing scripts."
+		else
+			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to create folder '$FOLDER'."$'\e[0m'
+			return $EXIT_CODE
+		fi
 	fi
 
-	install_file "$INSTALL" "$TARGET" "$BACKUP"
-	EXIT_CODE=$?
+	install_file "$INSTALL" "$TARGET" "$BACKUP" || EXIT_CODE=$?
 	[ -e "$BACKUP" ] && chmod +x "$BACKUP"
 	return $EXIT_CODE
 }
@@ -101,10 +104,10 @@ make_folder()
 #
 
 if [ $# -lt 1 ]; then
-	pushd "$XP_FOLDER" || exit $?
+	pushd "$XP_FOLDER" > /dev/null || exit $?
 	git submodule init
 	git submodule update
-	popd
+	popd > /dev/null
 fi
 
 make_folder ~/tmp
@@ -114,7 +117,8 @@ make_folder ~/.undo
 
 install_script 'shell/bashrc.sh' ~/.bashrc ~/.bashrc.d
 install_file 'vim/vimrc.vim' ~/.vimrc
-install_file 'config/screenrc.screen' ~/.screenrc
+install_file 'config/screen.screenrc' ~/.screenrc
+install_file 'config/tmux.conf' ~/.tmux.conf
 
 echo $'\e[31mLog in again or run: \e[msource ~/.bashrc'
 
