@@ -15,12 +15,16 @@
 " TODO Investigate these in help: 'digraph', 'timeoutlen', 'ttimeoutlen'
 	
 " Initialization: Standardize options/encoding, set up environment. {{{1
+	" Cache environment.
+	let s:env_ostype = system('echo $OSTYPE')
+	let s:env_comspec = system('echo $COMSPEC')
+
 	set nocompatible								" Enable non-vi-compatible features by default.
 
 	scriptencoding utf-8							" This script is UTF-8.
 
 	let s:vimdir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-	let g:solarized_flags = str2nr($SOLARIZED)
+	let g:solarized_flags = str2nr(system('echo $SOLARIZED'))
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
@@ -63,11 +67,15 @@
 
 	function s:IsCmdExe() " Determines whether running within Windows' cmd.exe or command.com. {{{2
 		" Unfortunately, we can't just test $COMSPEC, Cygwin keeps that as cmd.exe even through SSH.
-		if match('[\\/](cmd.exe|command.com)$', $COMSPEC) > 0 && match('^cygwin', $TERM) > 0
+		if match(s:env_comspec, '[\\/](cmd.exe|command.com)$') >= 0 && s:IsCygwin()
 			return 1
 		else
 			return 0
 		endif
+	endfunction
+
+	function s:IsCygwin() " Determine whether we're running within Cygwin.  vim + cygwin = funk {{{2
+		return match(s:env_ostype, 'cygwin') >= 0
 	endfunction
 
 	function s:AppendRtp(dir) " Append a:dir, a folder in s:vimdir, to &runtimepath.  Assumes that a:dir is raw (net yet escaped). {{{2
@@ -230,7 +238,7 @@
 		set hlsearch								" Highlight matched searches.  Use <C-\>/ or \/ to clear.
 	endif
 
-	colorscheme desert								" Basic color scheme.  Normally overridden by bundles.
+	colorscheme torte								" Basic color scheme.  Normally overridden by bundles/includes.
 	set background=dark
 
 	" For use with :mkview; specifies what to save
@@ -376,38 +384,45 @@
 		endif
 
 
-" Include: Primarily bundles. {{{1
-	" Vundle: {{{2
-		call s:AppendRtp('vundle')
-		call vundle#rc(s:vimdir . '/bundle')
+" Include: Primarily bundles and includes. {{{1
+	" Basic Includes: {{{2
+		echo s:vimdir . '/molokai.vim'
+		exec ':source ' .  s:vimdir . '/molokai.vim' | " Theme based on Monokai.
 
-	" Bundles: {{{2
-		" Solarized: {{{3
-			" $SOLARIZED: Bitmask; default: 0
-			" 0 0 0 0
-			" | | | |
-			" | | | +-- Disable solarized
-			" | | +---- Force compatibility with non-Solarized terminal palettes
-			" | +------ Use light theme
-			" +-------- Reserved; must be 0
-			if !s:HasFlag(g:solarized_flags, 1)
-				if s:HasFlag(g:solarized_flags, 2)
-					let g:solarized_termcolors=256
-					set t_Co=256
-				else
-					let g:solarized_termcolors=16
-					set t_Co=16
+	if !s:IsCygwin() " vundle is broken in Cygwin due to \r\n-style line endings.
+		" Vundle: {{{2
+			call s:AppendRtp('vundle')
+			call vundle#rc(s:vimdir . '/bundle')
+
+		" Bundles: {{{2
+			" Solarized: {{{3
+				" $SOLARIZED: Bitmask; default: 0
+				" 0 0 0 0
+				" | | | |
+				" | | | +-- Disable solarized
+				" | | +---- Force compatibility with non-Solarized terminal palettes
+				" | +------ Use light theme
+				" +-------- Reserved; must be 0
+				if 0 && !s:HasFlag(g:solarized_flags, 1) " Disabled for now.
+					if s:HasFlag(g:solarized_flags, 2)
+						let g:solarized_termcolors=256
+						set t_Co=256
+					else
+						let g:solarized_termcolors=16
+						set t_Co=16
+					endif
+
+					Bundle 'solarized'
+					colorscheme solarized
+
+					if !s:HasFlag(g:solarized_flags, 4)
+						set background=dark
+					else
+						set background=light
+					endif
 				endif
-
-				Bundle 'solarized'
-				colorscheme solarized
-
-				if !s:HasFlag(g:solarized_flags, 4)
-					set background=dark
-				else
-					set background=light
-				endif
-			endif
+		" }}}2
+	endif
 
 " }}}1
 " EOF
