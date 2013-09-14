@@ -21,12 +21,12 @@
 
 if [ -z "$XP_NO_COLOR" ]; then
 	case "$TERM" in
-		*-color)
+		*-col*)
 			export TERM="${TERM%-color}-${XP_COLOR}"
 			;;
 
-		*-8color | *-16color)
-			[ -z "$XP_NO_FORCE_COLOR" ] && export TERM="${TERM%-*color}-${XP_COLOR}"
+		*-8col*| *-16col*)
+			[ -z "$XP_NO_FORCE_COLOR" ] && export TERM="${TERM%-*col*}-${XP_COLOR}"
 			;;
 
 		xterm)

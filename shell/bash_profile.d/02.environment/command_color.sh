@@ -30,7 +30,8 @@ function make_color_alias
 
 function source_dircolors
 {
-	for f in ~/.dircolors "$XP_SHELL_FOLDER/dircolors/solarized/dircolors.ansi-dark"; do
+	#for f in ~/.dircolors "$XP_SHELL_FOLDER/dircolors/solarized/dircolors.ansi-dark"; do
+	for f in ~/.dircolors; do
 		if [ -r "$f" -a -f "$f" ]; then
 			eval "$(dircolors -b "$f")"
 			return $?
