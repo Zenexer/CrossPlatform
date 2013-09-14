@@ -41,11 +41,11 @@ install_file()
 		fi
 	elif [ -e "$TARGET" ]; then
 		mv "$TARGET" "$BACKUP" || EXIT_CODE=$?
-		if [ $EXIT_CODE ]; then
-			echo $'\e[0m'"Moved original '$TARGET' to '$BACKUP'."
-		else
+		if (( $EXIT_CODE )); then
 			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\e[m'
 			return $EXIT_CODE
+		else
+			echo $'\e[0m'"Moved original '$TARGET' to '$BACKUP'."
 		fi
 	fi
 
