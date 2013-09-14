@@ -386,6 +386,7 @@
 
 " Include: Primarily bundles and includes. {{{1
 	" Basic Includes: {{{2
+		set t_Co=256
 		exec ':source ' .  s:vimdir . '/molokai.vim' | " Theme based on Monokai.
 
 	if !s:IsCygwin() " vundle is broken in Cygwin due to \r\n-style line endings.
