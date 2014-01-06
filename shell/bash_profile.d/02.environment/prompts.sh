@@ -26,7 +26,8 @@ else
 fi
 
 if [ -z "$XP_NO_COLOR_PS" ]; then
-	export PS1='\[\e[33m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]'$user'\[\e[33m\]@\[\e[35m\]\h \[\e[36m\]\W\[\e[33m\]]\[\e[31m\]\$\[\e[0m\] '
+	# Old prompt: export PS1='\[\e[33m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[33m\]@\[\e[35m\]\h \[\e[36m\]\W\[\e[33m\]]\[\e[31m\]\$\[\e[0m\] '
+	export PS1='\[\e[38;5;202m\]$prompt_status\[\e[38;5;245m\]\u\[\e[m\]@\[\e[38;5;5m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\$ '
 else
 	# Use one escape code to reset formatting, even though we aren't using color.
 	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}'$user'@\h \W]\$ '
