@@ -25,12 +25,13 @@ else
 	user='unknown'
 fi
 
+export PROMPT_COMMAND='prompt_status="$? "; if [[ $prompt_status == "0 " ]]; then prompt_status=; fi' # Byobu
 if [ -z "$XP_NO_COLOR_PS" ]; then
-	# Old prompt: export PS1='\[\e[33m\][${XP_CHROOT:+(\[\e[31m\]$XP_CHROOT )}\[\e[32m\]\u\[\e[33m\]@\[\e[35m\]\h \[\e[36m\]\W\[\e[33m\]]\[\e[31m\]\$\[\e[0m\] '
-	export PS1='\[\e[38;5;202m\]$prompt_status\[\e[38;5;245m\]\u\[\e[m\]@\[\e[38;5;5m\]\h\[\e[m\]:\[\e[38;5;172m\]\w\[\e[m\]\$ '
+	# Based on Byobu
+	export PS1='${debian_chroot:+($debian_chroot)}\[\e[38;5;202m\]$prompt_status\[\e[38;5;245m\]\u\[\e[00m\]@\[\e[38;5;5m\]\h\[\e[00m\]:\[\e[38;5;172m\]\w\[\e[00m\]\$ '
 else
 	# Use one escape code to reset formatting, even though we aren't using color.
-	export PS1='\[\e[0m\][${XP_CHROOT:+($XP_CHROOT )}'$user'@\h \W]\$ '
+	export PS1='\[\e[0m\]${prompt_status}${debian_chroot:+($debian_chroot)}\u@\h \w\$ '
 fi
 
 unset user
