@@ -13,32 +13,9 @@
 #
 
 
-# Terminal Colors {{{1
+# ls {{{1
 #
 #
 
-[ -z "$XP_COLOR" ] && export XP_COLOR='256color'
-
-if [ -z "$XP_NO_COLOR" ]; then
-	case "$TERM" in
-		screen*)
-			# This is either tmux or screen; do not interfere
-			;;
-
-		*-col*)
-			export TERM="${TERM%-color}-${XP_COLOR}"
-			;;
-
-		*-8col*| *-16col*)
-			[ -z "$XP_NO_FORCE_COLOR" ] && export TERM="${TERM%-*col*}-${XP_COLOR}"
-			;;
-
-		xterm)
-			export TERM="xterm-$XP_COLOR"
-			;;
-
-		*)
-			;;
-	esac
-fi
+alias tmux='tmux -2'
 
