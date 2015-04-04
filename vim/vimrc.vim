@@ -385,44 +385,18 @@
 
 
 " Include: Primarily bundles and includes. {{{1
-	" Basic Includes: {{{2
-		set t_Co=256
-		exec ':source ' .  s:vimdir . '/molokai.vim' | " Theme based on Monokai.
+	call s:AppendRtp('runtime')
 
-	if !s:IsCygwin() " vundle is broken in Cygwin due to \r\n-style line endings.
-		" Vundle: {{{2
-			call s:AppendRtp('vundle')
-			call vundle#rc(s:vimdir . '/bundle')
+	" Theme: {{{2
+		"set t_Co=256
+		"exec ':source ' .  s:vimdir . '/molokai.vim' | " Theme based on Monokai.
+		" We're using this one instead now.
+		colorscheme monokai
 
-		" Bundles: {{{2
-			" Solarized: {{{3
-				" $SOLARIZED: Bitmask; default: 0
-				" 0 0 0 0
-				" | | | |
-				" | | | +-- Disable solarized
-				" | | +---- Force compatibility with non-Solarized terminal palettes
-				" | +------ Use light theme
-				" +-------- Reserved; must be 0
-				if 0 && !s:HasFlag(g:solarized_flags, 1) " Disabled for now.
-					if s:HasFlag(g:solarized_flags, 2)
-						let g:solarized_termcolors=256
-						set t_Co=256
-					else
-						let g:solarized_termcolors=16
-						set t_Co=16
-					endif
+	" Package Mangement: {{{2
+		" Pathogen: {{{3
+			execute pathogen#infect('bundle/{}', s:vimdir . '/runtime/bundle/{}')
 
-					Bundle 'solarized'
-					colorscheme solarized
-
-					if !s:HasFlag(g:solarized_flags, 4)
-						set background=dark
-					else
-						set background=light
-					endif
-				endif
-		" }}}2
-	endif
 
 " }}}1
 " EOF
