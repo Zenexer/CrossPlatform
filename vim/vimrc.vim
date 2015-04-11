@@ -13,13 +13,29 @@
 	"	tw:		Maximum width of a line before it gets wrapped.
 
 " TODO Investigate these in help: 'digraph', 'timeoutlen', 'ttimeoutlen'
-	
+
+" Prerequisites: {{{1
+	" This wraps the entire script.  Note that "if !has('eval')" won't work, at least for vim.tiny.
+	if has('eval')
+	" As far as indentation goes, we're going to pretend that never happened.
+
+	" Restore vi behavior on Ubuntu/Debian.
+	if v:progname ==# 'vi' || v:progname ==# 'vim.tiny' || v:progname ==? 'vi.exe'
+		set compatible
+	endif
+
+	" Skip for vi compatibility mode.
+	if &compatible
+		finish
+	endif
+
+
 " Initialization: Standardize options/encoding, set up environment. {{{1
 	" Cache environment.
 	let s:env_ostype = system('echo $OSTYPE')
 	let s:env_comspec = system('echo $COMSPEC')
 
-	set nocompatible								" Enable non-vi-compatible features by default.
+	"set nocompatible								" Enable non-vi-compatible features by default.
 
 	scriptencoding utf-8							" This script is UTF-8.
 
@@ -102,7 +118,7 @@
 		" Example would be, "vim: fenc=latin1 enc=latin1"
 		set encoding=utf-8							" Internal vim encoding.  Processed as UTF-8, but supports up to UCS-4.
 		set termencoding=utf-8						" Encoding of vim output.
-		set fileformats=unix,dos,mac				" Default to LF line endings for new files, but recognize all line endings.
+		set fileformats=unix,dos					" Default to LF line endings for new files, but recognize all line endings except "<CR>".
 		set fileencodings=ucs-bom,utf-8,latin1		" Default to UCS if BOM is set.  If UCS and UTF-8 error out, fallback to latin1.
 		setglobal fileencoding=utf-8				" Default to utf-8 without BOM for new files, so as to preserve magic numbers, such as "#!".
 		
@@ -176,11 +192,11 @@
 	endif
 
 	" Insert undo breaks frequently so that an undo doesn't rewind an entire insert mode session.
-	inoremap <CR> <C-G>u<CR>
-	inoremap <Space> <C-G>u<Space>
-	inoremap . <C-G>u.
-	inoremap <Tab> <C-G>u<Tab>
-	inoremap <BS> <C-G>u<BS>
+	"inoremap <CR> <C-G>u<CR>
+	"inoremap <Space> <C-G>u<Space>
+	"inoremap . <C-G>u.
+	"inoremap <Tab> <C-G>u<Tab>
+	"inoremap <BS> <C-G>u<BS>
 
 
 " Code Blocks: Indentation, folding, tabs, etc. {{{1
@@ -197,7 +213,7 @@
 		set nofoldenable							" Disable folding by default. zi to toggle.
 		set foldmethod=syntax						" Fold based on syntax.
 
-		"Spacebar toggles current fold if in fold; defaults to old spacebar behavior otherwise.
+		" Spacebar toggles current fold if in fold; defaults to old spacebar behavior otherwise.
 		nnoremap <expr> <silent> <Space> (foldlevel('.') ? 'za' : "\<Space>")
 
 
@@ -227,12 +243,13 @@
 " User Interface: Colors, line numbering, etc. {{{1
 	set number										" Line numbering.
 	set scrolloff=4									" Minimum number of lines to keep above/below cursor.
-	set display=lastline							" Don't replace screen-overflowing lines with '@@@@'...
+	"set display=lastline							" Don't replace screen-overflowing lines with '@@@@'... (Update: This seems to
+													"   have a negative impact on performance.)
 	set nottyfast									" Only redraw updated parts of the screen.
 	set showcmd										" Show info about last command/visual selection on bottom row.
 	set history=1024								" Couldn't realistically use up this much history.
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
-	set foldcolumn=4								" Width of fold gutter.
+	set foldcolumn=2								" Width of fold gutter.
 	
 	if has('extra_search')
 		set hlsearch								" Highlight matched searches.  Use <C-\>/ or \/ to clear.
@@ -303,6 +320,8 @@
 	command Q q
 	command WQ wq
 	command WN wn
+	command QA qa
+	command WA wa
 
 
 " Mappings: Keyboard shortcuts. {{{1
@@ -397,6 +416,9 @@
 		" Pathogen: {{{3
 			execute pathogen#infect('bundle/{}', s:vimdir . '/runtime/bundle/{}')
 
+
+" EOF: {{{1
+	endif
 
 " }}}1
 " EOF
