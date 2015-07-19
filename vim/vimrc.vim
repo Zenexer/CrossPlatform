@@ -34,6 +34,7 @@
 	" Cache environment.
 	let s:env_ostype = system('echo $OSTYPE')
 	let s:env_comspec = system('echo $COMSPEC')
+	let s:env_term = $TERM
 
 	"set nocompatible								" Enable non-vi-compatible features by default.
 
@@ -241,7 +242,7 @@
 
 
 " User Interface: Colors, line numbering, etc. {{{1
-	set number										" Line numbering.
+	set nonumber									" Disable line numbering.
 	set scrolloff=4									" Minimum number of lines to keep above/below cursor.
 	"set display=lastline							" Don't replace screen-overflowing lines with '@@@@'... (Update: This seems to
 													"   have a negative impact on performance.)
@@ -249,14 +250,15 @@
 	set showcmd										" Show info about last command/visual selection on bottom row.
 	set history=1024								" Couldn't realistically use up this much history.
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
-	set foldcolumn=2								" Width of fold gutter.
+	set foldcolumn=0								" Width of fold gutter.
 	
 	if has('extra_search')
-		set hlsearch								" Highlight matched searches.  Use <C-\>/ or \/ to clear.
+		set hlsearch								" Highlight matched searches.  Use <C-\>/, <C-/>, or \/ to clear.
 	endif
 
-	colorscheme torte								" Basic color scheme.  Normally overridden by bundles/includes.
-	set background=dark
+	" Disabled to use platform defaults.
+	"colorscheme torte								" Basic color scheme.  Normally overridden by bundles/includes.
+	"set background=dark
 
 	" For use with :mkview; specifies what to save
 	set viewoptions=cursor,folds,options
@@ -271,9 +273,15 @@
 		set nocursorline							" Looks horrible since cmd.exe doesn't support underline.
 		set mouse=									" No mouse support in cmd.exe
 	else
-		set cursorline								" Underline the line in which the cursor lies.
-		let s:default_mouse = 'a'					" Enable the mouse, with automatic mode determination, in all modes.
+		"set cursorline								" Underline the line in which the cursor lies.
+		set nocursorline							" This can get annoying, so disable it by default.
+		"let s:default_mouse = 'a'					" Enable the mouse, with automatic mode determination, in all modes.
+		let s:default_mouse = ''					" Disable the mouse by default.
 		let &mouse = s:default_mouse
+
+		if s:env_term ==# 'screen' && &t_Co == 8
+			set t_Co=256
+		endif
 	endif
 
 	" Status Line: What the status line should look like. {{{2
@@ -283,10 +291,11 @@
 			" The status line contents; similar to spf13
 			set statusline=%#WarningMsg#%w%h		" Preview Window, Help File
 			set statusline+=%#ErrorMsg#%r			" Read Only
-			set statusline+=%*%m					" Modified
+			set statusline+=%#Comment#              " Color for the rest of the status line
+			set statusline+=%m						" Modified
 			set statusline+=\ %<%f					" File Name
 			set statusline+=\ [%{&ff}]%y			" File Format
-			set statusline+=\ co=%{&t_Co}			" Terminal Colors
+			set statusline+=\ t_Co=%{&t_Co}			" Terminal Colors
 			set statusline+=%=						" Start Right Align
 			set statusline+=%<%{getcwd()}			" Current Working Directory
 			set statusline+=\ \ %l,%c-%v%4.4p%%		" Cursor Position
@@ -410,7 +419,8 @@
 		"set t_Co=256
 		"exec ':source ' .  s:vimdir . '/molokai.vim' | " Theme based on Monokai.
 		" We're using this one instead now.
-		colorscheme monokai
+		"colorscheme monokai
+		" Never mind, now we're using the default.
 
 	" Package Mangement: {{{2
 		" Pathogen: {{{3
