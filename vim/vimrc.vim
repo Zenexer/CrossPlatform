@@ -279,7 +279,7 @@
 		let s:default_mouse = ''					" Disable the mouse by default.
 		let &mouse = s:default_mouse
 
-		if s:env_term ==# 'screen' && &t_Co == 8
+		if (s:env_term ==# 'screen' || s:env_term ==# 'cygwin') && &t_Co == 8
 			set t_Co=256
 		endif
 	endif
