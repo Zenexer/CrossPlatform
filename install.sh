@@ -121,6 +121,7 @@ install_file 'config/screen.screenrc' ~/.screenrc
 install_file 'config/tmux.conf' ~/.tmux.conf
 
 "$XP_FOLDER/grml.sh"
+"$XP_FOLDER/git.sh" && true
 
 echo $'\e[31mLog in again or run: \e[msource ~/.bashrc'
 
