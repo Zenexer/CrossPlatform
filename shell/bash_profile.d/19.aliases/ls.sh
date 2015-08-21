@@ -17,7 +17,14 @@
 #
 #
 
-alias ls='ls --color=auto -F'
+if ls --color=auto -F > /dev/null 2>&1; then
+	alias ls='ls --color=auto -F'  # Linux
+elif ls -GF > /dev/null 2>&1; then
+	alias ls='ls -GF'  # Mac
+elif ls -F > /dev/null 2>&1; then
+	alias ls='ls -F'
+fi
+
 alias ll='ls -alh'
 alias la='ls -A'
 alias l='ls -C'

@@ -123,5 +123,17 @@ install_file 'config/tmux.conf' ~/.tmux.conf
 "$XP_FOLDER/grml.sh"
 "$XP_FOLDER/git.sh" && true
 
+case "$OSTYPE" in
+	darwin*)
+		if ! grep -qF '/.bashrc' /etc/bashrc; then
+			echo $'\e[31mEnter your password to patch /etc/bashrc, or leave blank to skip:\e[m'
+			sudo bash -c 'cat >> /etc/bashrc' <<'EOD'
+
+[ -e ~/.bashrc ] && . ~/.bashrc
+EOD
+		fi
+		;;
+esac
+
 echo $'\e[31mLog in again or run: \e[msource ~/.bashrc'
 

@@ -17,17 +17,22 @@
 #
 #
 
+setopt()
+{
+	shopt -s "$1" > /dev/null 2>&1
+}
+
 # Update window size after each command.
-shopt -s checkwinsize
+setopt checkwinsize
 
 # Append to history file; don't overwrite it.
-shopt -s histappend
+setopt histappend
 
 # Allow globstar (**).
-shopt -s globstar
+setopt globstar
 
 # Store multi-line commands in single history entries.
-shopt -s cmdhist
+setopt cmdhist
 
 # Allow pattern lists in pathname expansion, such as ?(...|...)
-shopt -s extglob
+setopt extglob
