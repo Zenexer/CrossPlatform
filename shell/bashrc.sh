@@ -17,7 +17,7 @@
 # -f flag for readlink is a GNU thing
 readlinkf()
 {
-	readlink -f "$1" &> /dev/null || readlink "$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")"
+	readlink -f "$1" 2> /dev/null || readlink "$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")"
 }
 
 export XP_FOLDER="$(cd "$(dirname "$(readlinkf "${BASH_SOURCE[0]}")")" && cd .. && pwd)"
