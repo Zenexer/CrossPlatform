@@ -20,6 +20,9 @@ readlinkf()
 	readlink -f "$1" 2> /dev/null || readlink "$(cd "$(dirname "$1")" && pwd -P)/$(basename "$1")"
 }
 
+if [[ "$OSTYPE" == 'cygwin' ]] && ! type readlink > /dev/null 2>&1; then
+	export PATH="/usr/local/bin:/usr/bin:$PATH"
+fi
 export XP_FOLDER="$(cd "$(dirname "$(readlinkf "${BASH_SOURCE[0]}")")" && cd .. && pwd)"
 
 # Sourcing {{{1
@@ -27,10 +30,11 @@ export XP_FOLDER="$(cd "$(dirname "$(readlinkf "${BASH_SOURCE[0]}")")" && cd .. 
 #
 
 # ~/.bashrc.d {{{2
-BASHRC_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")/.bashrc.d" && pwd)"
-for f in "$BASHRC_FOLDER"/*; do
-	[ -x "$f" ] && source "$f"
-done
+if [ -d "$BASHRC_FOLDER" ]; then
+	for f in "$BASHRC_FOLDER"/*; do
+		[ -x "$f" ] && source "$f"
+	done
+fi
 unset BASHRC_FOLDER
 
 # $XP_FOLDER/shell/profile.sh {{{2
