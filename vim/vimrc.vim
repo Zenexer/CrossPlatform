@@ -246,7 +246,8 @@
 	set scrolloff=4									" Minimum number of lines to keep above/below cursor.
 	"set display=lastline							" Don't replace screen-overflowing lines with '@@@@'... (Update: This seems to
 													"   have a negative impact on performance.)
-	set nottyfast									" Only redraw updated parts of the screen.
+	"set nottyfast									" Only redraw updated parts of the screen.  (Update: This seems to break on
+													"   on many systems.)
 	set showcmd										" Show info about last command/visual selection on bottom row.
 	set history=1024								" Couldn't realistically use up this much history.
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
