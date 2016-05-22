@@ -6,9 +6,9 @@ if type wget; then
 		wget -O ~/.zshrc.local http://git.grml.org/f/grml-etc-core/etc/skel/.zshrc || exit $?
 	fi
 elif type curl; then
-	curl -o ~/.zshrc http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || exit $?
+	curl -Lo ~/.zshrc http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || exit $?
 	if [ ! -e ~/.zshrc.local ]; then
-		curl -o ~/.zshrc.local http://git.grml.org/f/grml-etc-core/etc/skel/.zshrc || exit $?
+		curl -Lo ~/.zshrc.local http://git.grml.org/f/grml-etc-core/etc/skel/.zshrc || exit $?
 	fi
 else
 	echo "Couldn't find wget or curl" >&2
