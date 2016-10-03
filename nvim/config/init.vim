@@ -96,42 +96,14 @@
 
 
 " Platform Independence: Sets the same basic defaults on all platforms. {{{1
-	" Internal Encodings: Internal and output encoding, not write encoding. {{{2
-		" These may need to be overridden  before editing very, very large files.  Preferred solution is modeline in file.
-		" Example would be, "vim: fenc=latin1 enc=latin1"
-		set encoding=utf-8							" Internal vim encoding.  Processed as UTF-8, but supports up to UCS-4.
-		set termencoding=utf-8						" Encoding of vim output.
-		set fileformats=unix,dos					" Default to LF line endings for new files, but recognize all line endings except "<CR>".
-		set fileencodings=ucs-bom,utf-8,latin1		" Default to UCS if BOM is set.  If UCS and UTF-8 error out, fallback to latin1.
-		setglobal fileencoding=utf-8				" Default to utf-8 without BOM for new files, so as to preserve magic numbers, such as "#!".
-		
-		set delcombine								" For combined characters, only delete one character at a time.
-
-
 	" Universal: Set the same values across all platforms that might otherwise vary. {{{2
-		set backspace=indent,eol,start				" Some implementations don't have this as the default.
-
-
 		let mapleader="\\"							" Used in place of <Leader>.
-
-		" Try to integrate with system clipboard.
-		if has('unnamedplus')
-			set clipboard=unnamed,unnamedplus		" Export yanked text to the X11 clipboard.
-		else
-			set clipboard=unnamed					" Export yanked text to the only clipboard.
-		endif
 
 	" Embedded: Android, etc. {{{2
 		" For the Android keyboard.  The key to the left of <End> sends <Nul>.
 		" This can be fixed by hard-mapping 0 to <kHome>, but it's nice to have this as a backup.
 		map <Nul> <Home>
 		map! <Nul> <Home>
-
-	" Windows: Fixes for Windows/MS-DOS. {{{2
-		" Use .vim instead of vimfiles on Windows to make for easier transitions between systems.
-		if has('win32') || has('win64')
-			set runtimepath=~/.vim,$VIM/vimfiles,$VIMRUNTIME,~/.vim/after,$VIM/vimfiles/after
-		endif
 
 	" Mac: Fixes for OS X. {{{2
 		" Home/End keybinding fix for Mac. Only required with default Terminal.app.   Custom terminals, such as iTerm, generally fix this.
@@ -142,25 +114,24 @@
 
 
 " Persistency And Redundancy: Version control, backups, undo history, saving marks, etc. {{{1
-	set directory=./.swp,~/.swp,./.tmp,~/tmp,/tmp,.	" Preference of swap directories.
-	set backupdir=./.backup,~/.backup,~/tmp,/tmp,.	" Preference of backup directories.
+	set directory=~/.local/share/nvim/swap,/tmp,.	" Preference of swap directories.
+	set backupdir=~/.local/share/nvim/backup,/tmp,.	" Preference of backup directories.
 	set backup										" Enable backups.
 
 	" '256	Save marks for previous 256 files.
 	" <1024	Save up to 1024 lines for each register.
-	" !		Save uppdercase global variables.
+	" !		Save uppercase global variables.
 	" %		Restore buffer list when not passed a file to open.
 	" /128	Save 128 search/substitute patterns.
 	" :256	Save 256 command line items.
 	" @256	Save 256 input lines.
-	" c		Convert viminfo encoding to current encoding.
 	" f1	Store file marks (uppercase and numbers).
 	" h		Don't highlight old searches loaded from viminfo through hlsearch.
 	" s100	Each register can be up to 100 KB.
 	" r		Removable media and other temporary paths for which no marks should be stored.  Varies by OS.
-	set viminfo='256,<1024,!,%,/128,:256,@256,c,f1,h,s100,r/tmp,r$HOME/tmp,r$HOME/.tmp,r/media
-	if "$TEMP" != ''
-		set viminfo+=r$TEMP
+	set viminfo='256,<1024,!,%,/128,:256,@256,f1,h,s100,r/tmp,r$HOME/tmp,r$HOME/.tmp,r/media
+	if "$TMPDIR" != ''
+		set viminfo+=r$TMPDIR
 	endif
 	if has('win32') || has('win64')
 		set viminfo+=ra:,r/a/
@@ -171,11 +142,11 @@
 	if has('persistent_undo')
 		set undofile								" Enable persistent undo.
 		set undoreload=16384						" Maximum number of lines to save in undo history if buffer is reloaded.
-		set undodir=./.undo,~/.undo,~/tmp,/tmp/,.	" Preference of undo directories.
+		set undodir=~/.local/share/nvim/undo,/tmp,.	" Preference of undo directories.
 	endif
 
 	" Insert undo breaks frequently so that an undo doesn't rewind an entire insert mode session.
-	"inoremap <CR> <C-G>u<CR>
+	inoremap <CR> <C-G>u<CR>
 	"inoremap <Space> <C-G>u<Space>
 	"inoremap . <C-G>u.
 	"inoremap <Tab> <C-G>u<Tab>
@@ -190,8 +161,6 @@
 		set shiftround								" Round existing indentation upon reindentation.
 		set copyindent								" Copy previous line's tab/space combination.
 
-		filetype plugin indent on					" Syntax-based automatic indentation.
-
 	" Folding: Only the syntax fold settings.  Fold gutter goes under UI. {{{2
 		set nofoldenable							" Disable folding by default. zi to toggle.
 		set foldmethod=syntax						" Fold based on syntax.
@@ -202,33 +171,18 @@
 
 " Code Integration: Common language integration mechanisms, such as syntax highlighting. {{{1
 	set modeline									" Read vim settings from comments at top/bottom of file.
-	set modelines=15								" Leave enough room to put header comments before modelines; don't do that, though.
+	set modelines=5									" Leave enough room to put header comments before modelines; don't do that, though.
 
+	filetype on										" Enable filetype detection scripts.
+	filetype plugin on								" Enable filetype plugin scripts.
+	filetype indent on								" Enable syntax-based automatic indentation.
 	syntax enable									" Enable syntax highlighting and such.
-
-	" Autocomplete: Various autocompletion mechanisms.  {{{2
-		set completeopt=menu,menuone,preview		" Use a popup menu, show a menu even if only one completion, and show a preview.
-
-		highlight Pmenu ctermbg=DarkBlue ctermfg=LightGray
-		highlight PmenuSel ctermbg=DarkMagenta ctermfg=LightGray
-		highlight PmenuSbar ctermbg=LightBlue ctermfg=DarkMagenta
-		highlight PmenuThumb ctermbg=DarkMagenta ctermfg=LightMagenta
-
-		" Autocomplete based on syntax highlighting for uncustomized files.
-		if has('autocmd') && exists("+omnifunc")
-			autocmd Filetype *
-				\	if empty(&omnifunc) |
-				\		setlocal omnifunc=syntaxcomplete#Complete |
-				\	endif
-		endif
 
 
 " User Interface: Colors, line numbering, etc. {{{1
 	set nonumber									" Disable line numbering.
-	set scrolloff=4									" Minimum number of lines to keep above/below cursor.
 	"set display=lastline							" Don't replace screen-overflowing lines with '@@@@'... (Update: This seems to
 													"   have a negative impact on performance.)
-													"   on many systems.)
 	set showcmd										" Show info about last command/visual selection on bottom row.
 	set history=1024								" Couldn't realistically use up this much history.
 	set showmode									" Show current mode.  This is default with nocompatible, but reiterate.
@@ -251,8 +205,10 @@
 	endif
 
 	" Specific to Windows' cmd.exe.
+	" Note that these restrictions have been lifted in Windows 10 Anniversary, but I'm not sure whether neovim/msys2/cygwin
+	" supports them yet.
 	if s:IsCmdExe()
-		set nocursorline							" Looks horrible since cmd.exe doesn't support underline.
+		"set nocursorline							" Looks horrible since cmd.exe doesn't support underline.
 		set mouse=									" No mouse support in cmd.exe
 	else
 		"set cursorline								" Underline the line in which the cursor lies.
@@ -267,6 +223,7 @@
 			set laststatus=2						" Always show the status line.
 
 			" The status line contents; similar to spf13
+			" TODO Better color scheme
 			set statusline=%#WarningMsg#%w%h		" Preview Window, Help File
 			set statusline+=%#ErrorMsg#%r			" Read Only
 			set statusline+=%#Comment#              " Color for the rest of the status line
@@ -280,7 +237,7 @@
 		endif
 	
 	" Windows And Tabs: Windows, tabs, and buffers. {{{2
-		set hidden									" Enable hidden buffers.
+		"set hidden									" Enable hidden buffers.
 		
 		if has('windows')
 			set showtabline=2						" Always show tabs.
@@ -388,17 +345,6 @@
 			noremap <script> <C-_> <SID>CrossPlatform-ClearSearch
 			noremap! <script> <C-_> <SID>CrossPlatform-ClearSearch
 		endif
-
-
-" Include: Primarily bundles and includes. {{{1
-	call s:AppendRtp('runtime')
-
-	" Theme: {{{2
-		" Never mind, now we're using the default.
-
-	" Package Mangement: {{{2
-		" Pathogen: {{{3
-			"execute pathogen#infect('bundle/{}', s:vimdir . '/runtime/bundle/{}')
 
 
 " EOF

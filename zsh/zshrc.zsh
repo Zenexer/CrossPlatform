@@ -1,10 +1,18 @@
 #!/usr/bin/env zsh
 # vim: ts=4 sw=4 sts=4 sr sts=4 noet ff=unix fenc=utf-8
 
-__hasterm_method=
+REPORTTIME=2
+VIM_OPTIONS=( -p )
+NVIM_OPTIONS=$VIM_OPTIONS
+TMUX_OPTIONS=( -2 )
 
-hasterm()
-{
+function hasterm() {
+	emulate -L zsh
+
+	if (( ! $+__hasterm_method )); then
+		typeset -g __hasterm_method
+	fi
+
 	if [[ -z "$__hasterm_Method" ]]; then
 		if tput colors &> /dev/null; then
 			__hasterm_method=tput
@@ -41,8 +49,9 @@ hasterm()
 	esac
 }
 
-chooseterm()
-{
+function chooseterm() {
+	emulate -L zsh
+
 	local i=
 	for i in "$@"; do
 		if hasterm "$i"; then
@@ -53,8 +62,9 @@ chooseterm()
 	false
 }
 
-fixterm()
-{
+function fixterm() {
+	emulate -L zsh
+
 	local term=
 
 	case "$TERM" in
@@ -102,8 +112,30 @@ fixterm()
 	esac
 }
 
+function echoco() {
+	echoti setaf "$1"
+	echo "${@:2}"
+	echoti sgr0
+}
+
+function debug() {
+	echoco 8 - "$*"
+}
+
 export TERM="$(fixterm)"
-echo "TERM=$TERM" >&2
+debug "Terminal: $TERM" >&2
+
+if check_com -c nvim; then
+	export EDITOR=nvim
+fi
+
+nvim() {
+	VIM_PLEASE_SET_TITLE=yes command vim $NVIM_OPTIONS "$@"
+}
+
+tmux() {
+	command tmux $TMUX_OPTIONS "$@"
+}
 
 if [[ -d ~/.zsh/init ]]; then
 	for f in ~/.zsh/init/*; do

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8 tw=130
 # 	ts:	Actual tab character stops.
 # 	sw:	Indentation commands shift by this much.
@@ -39,7 +39,7 @@ install_file()
 			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to remove old symbolic link."$'\e[m'
 			return 1
 		fi
-	elif [ -e "$TARGET" -a ! -e "$BACKUP" ]; then
+	elif [[ -e "$TARGET" && ! -e "$BACKUP" ]]; then
 		mv "$TARGET" "$BACKUP" || EXIT_CODE=$?
 		if (( $EXIT_CODE )); then
 			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\e[m'
@@ -72,10 +72,10 @@ install_script()
 		FOLDER="$4"
 	fi
 
-	if [ -z "$4" ]; then
+	if [ -z "$5" ]; then
 		BACKUP="$FOLDER/10-default.$ext"
 	else
-		BACKUP="$FOLDER/$4"
+		BACKUP="$FOLDER/$5"
 	fi
 
 	if [ ! -d "$FOLDER" ]; then
@@ -117,6 +117,10 @@ make_folder ~/.backup
 make_folder ~/.undo
 make_folder ~/.config/nvim
 make_folder ~/.zsh/cache
+make_folder ~/.zsh/init
+make_folder ~/.local/share/nvim/backup
+make_folder ~/.local/share/nvim/swap
+make_folder ~/.local/share/nvim/undo
 
 install_script  sh   shell/bashrc.sh    ~/.bashrc       ~/.bashrc.d
 install_script  zsh  zsh/zshrc.zsh      ~/.zshrc.local  ~/.zsh/init
@@ -135,7 +139,8 @@ case "$OSTYPE" in
 				local yn=
 				echo -n $'\e[31mPatch /etc/bashrc? [y/n]:\e[m ' >&2
 				read -srn1 yn || true
-				if [ "$yn" = 'y' ]; then
+				echo
+				if [[ "$yn" = 'y' || "$yn" = 'Y' ]]; then
 					echo "Patching..." >&2
 					sudo tee -a /etc/bashrc <<< $'\n\n[ -e ~/.bashrc ] && . ~/.bashrc'
 				else

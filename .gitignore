@@ -1,5 +1,14 @@
 # vim: ff=unix fenc=utf-8 tw=79
 
-# vim
-*.un~
+*~
 *.swp
+*.bak
+*.old
+*.tmp
+tmp/
+bak/
+old/
+Thumbs.db
+desktop.ini
+.DS_Store
+__MACOSX
