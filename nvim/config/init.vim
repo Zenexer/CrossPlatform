@@ -347,4 +347,8 @@
 		endif
 
 
+" Include: Primarily bundles and includes. {{{1
+	call s:AppendRtp('runtime')
+
+
 " EOF
