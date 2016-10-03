@@ -39,4 +39,3 @@ unset BASHRC_FOLDER
 
 # $XP_FOLDER/shell/profile.sh {{{2
 [ -x "$XP_FOLDER/shell/bash_profile.sh" ] && source "$XP_FOLDER/shell/bash_profile.sh"
-

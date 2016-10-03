@@ -39,7 +39,7 @@ install_file()
 			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to remove old symbolic link."$'\e[m'
 			return 1
 		fi
-	elif [ -e "$TARGET" ]; then
+	elif [ -e "$TARGET" -a ! -e "$BACKUP" ]; then
 		mv "$TARGET" "$BACKUP" || EXIT_CODE=$?
 		if (( $EXIT_CODE )); then
 			echo $'\e[31m'"Could not install '$INSTALL' to '$TARGET': unable to back up existing file."$'\e[m'
@@ -62,17 +62,18 @@ install_file()
 # install_script {{{2
 install_script()
 {
-	INSTALL="$1"
-	TARGET="$2"
+	ext="$1"
+	INSTALL="$2"
+	TARGET="$3"
 
-	if [ -z "$3" ]; then
+	if [ -z "$4" ]; then
 		FOLDER="$TARGET.d"
 	else
-		FOLDER="$3"
+		FOLDER="$4"
 	fi
 
 	if [ -z "$4" ]; then
-		BACKUP="$FOLDER/default.sh"
+		BACKUP="$FOLDER/10-default.$ext"
 	else
 		BACKUP="$FOLDER/$4"
 	fi
@@ -114,11 +115,15 @@ make_folder ~/tmp
 make_folder ~/.swp
 make_folder ~/.backup
 make_folder ~/.undo
+make_folder ~/.config/nvim
+make_folder ~/.zsh/cache
 
-install_script 'shell/bashrc.sh' ~/.bashrc ~/.bashrc.d
-install_file 'vim/vimrc.vim' ~/.vimrc
-install_file 'config/screen.screenrc' ~/.screenrc
-install_file 'config/tmux.conf' ~/.tmux.conf
+install_script  sh   shell/bashrc.sh    ~/.bashrc       ~/.bashrc.d
+install_script  zsh  zsh/zshrc.zsh      ~/.zshrc.local  ~/.zsh/init
+install_file    vim/vimrc.vim           ~/.vimrc
+install_file    config/screen.screenrc  ~/.screenrc
+install_file    config/tmux.conf        ~/.tmux.conf
+install_file    nvim/config/init.vim    ~/.config/nvim/init.vim
 
 "$XP_FOLDER/grml.sh"
 "$XP_FOLDER/git.sh" && true
@@ -126,14 +131,28 @@ install_file 'config/tmux.conf' ~/.tmux.conf
 case "$OSTYPE" in
 	darwin*)
 		if ! grep -qF '/.bashrc' /etc/bashrc; then
-			echo $'\e[31mEnter your password to patch /etc/bashrc, or leave blank to skip:\e[m'
-			sudo bash -c 'cat >> /etc/bashrc' <<'EOD'
-
-[ -e ~/.bashrc ] && . ~/.bashrc
-EOD
+			if ! grep -qF -e '~/.bashrc' -e '$HOME/.bashrc' /etc/bashrc; then
+				local yn=
+				echo -n $'\e[31mPatch /etc/bashrc? [y/n]:\e[m ' >&2
+				read -srn1 yn || true
+				if [ "$yn" = 'y' ]; then
+					echo "Patching..." >&2
+					sudo tee -a /etc/bashrc <<< $'\n\n[ -e ~/.bashrc ] && . ~/.bashrc'
+				else
+					echo "Skipping patch" >&2
+				fi
+			fi
 		fi
 		;;
 esac
 
-echo $'\e[31mLog in again or run: \e[msource ~/.bashrc'
+case "$(basename "$SHELL")" in
+	zsh|bash)
+		echo $'\e[31mLog in again or run: \e[m. ~/.'"$(basename "$SHELL")"'rc'
+		;;
+
+	*)
+		echo $'\e[31mLog in again with bash or zsh.\e[m'
+		;;
+esac
 

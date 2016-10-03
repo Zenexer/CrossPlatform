@@ -1,7 +1,8 @@
-#!/usr/bin/env vim
+#!/usr/bin/env nvim
 " zn toggles folding.  za toggles an individual fold.  zR and zM expand and contract all folds.
 " File Modeline Definition: {{{1
-	" vim: ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8 tw=130
+	" vim: noet ts=4 sw=4 sr sts=4 fdm=marker fmr={{{,}}} ff=unix fenc=utf-8 tw=130
+	" 	noet:	Don't expand tabs to spaces
 	"	ts:		Actual tab character stops.
 	"	sw:		Indentation commands shift by this much.
 	"	sr:		Round existing indentation when using shift commands.
@@ -14,34 +15,15 @@
 
 " TODO Investigate these in help: 'digraph', 'timeoutlen', 'ttimeoutlen'
 
-" Prerequisites: {{{1
-	" This wraps the entire script.  Note that "if !has('eval')" won't work, at least for vim.tiny.
-	if has('eval')
-	" As far as indentation goes, we're going to pretend that never happened.
-
-	" Restore vi behavior on Ubuntu/Debian.
-	if v:progname ==# 'vi' || v:progname ==# 'vim.tiny' || v:progname ==? 'vi.exe'
-		set compatible
-	endif
-
-	" Skip for vi compatibility mode.
-	if &compatible
-		finish
-	endif
-
-
 " Initialization: Standardize options/encoding, set up environment. {{{1
 	" Cache environment.
 	let s:env_ostype = system('echo $OSTYPE')
 	let s:env_comspec = system('echo $COMSPEC')
 	let s:env_term = $TERM
 
-	"set nocompatible								" Enable non-vi-compatible features by default.
-
 	scriptencoding utf-8							" This script is UTF-8.
 
 	let s:vimdir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-	let g:solarized_flags = str2nr(system('echo $SOLARIZED'))
 	
 
 " Helper Functions: Used by user Ex commands.  Must be toward the top. {{{1
@@ -246,7 +228,6 @@
 	set scrolloff=4									" Minimum number of lines to keep above/below cursor.
 	"set display=lastline							" Don't replace screen-overflowing lines with '@@@@'... (Update: This seems to
 													"   have a negative impact on performance.)
-	"set nottyfast									" Only redraw updated parts of the screen.  (Update: This seems to break on
 													"   on many systems.)
 	set showcmd										" Show info about last command/visual selection on bottom row.
 	set history=1024								" Couldn't realistically use up this much history.
@@ -279,10 +260,6 @@
 		"let s:default_mouse = 'a'					" Enable the mouse, with automatic mode determination, in all modes.
 		let s:default_mouse = ''					" Disable the mouse by default.
 		let &mouse = s:default_mouse
-
-		if (s:env_term ==# 'screen' || s:env_term ==# 'cygwin') && &t_Co == 8
-			set t_Co=256
-		endif
 	endif
 
 	" Status Line: What the status line should look like. {{{2
@@ -417,10 +394,6 @@
 	call s:AppendRtp('runtime')
 
 	" Theme: {{{2
-		"set t_Co=256
-		"exec ':source ' .  s:vimdir . '/molokai.vim' | " Theme based on Monokai.
-		" We're using this one instead now.
-		"colorscheme monokai
 		" Never mind, now we're using the default.
 
 	" Package Mangement: {{{2
@@ -428,8 +401,4 @@
 			"execute pathogen#infect('bundle/{}', s:vimdir . '/runtime/bundle/{}')
 
 
-" EOF: {{{1
-	endif
-
-" }}}1
 " EOF
