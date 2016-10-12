@@ -1,3 +1,12 @@
+BoldAsFont=-1
+CursorType=block
+Locale=en_US
+Charset=UTF-8
+CtrlShiftShortcuts=yes
+Term=xterm-256color
+Font=Consolas
+FontHeight=11
+CursorBlinks=no
 BackgroundColour=13,25,38
 ForegroundColour=217,230,242
 CursorColour=217,230,242
