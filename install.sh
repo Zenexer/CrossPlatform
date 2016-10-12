@@ -128,6 +128,7 @@ install_file    vim/vimrc.vim           ~/.vimrc
 install_file    config/screen.screenrc  ~/.screenrc
 install_file    config/tmux.conf        ~/.tmux.conf
 install_file    nvim/config/init.vim    ~/.config/nvim/init.vim
+install_file    config/minttyrc         ~/.minttyrc
 
 "$XP_FOLDER/grml.sh"
 "$XP_FOLDER/git.sh" && true
