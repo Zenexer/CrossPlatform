@@ -130,7 +130,7 @@ if check_com -c nvim; then
 fi
 
 nvim() {
-	VIM_PLEASE_SET_TITLE=yes command vim $NVIM_OPTIONS "$@"
+	VIM_PLEASE_SET_TITLE=yes command nvim $NVIM_OPTIONS "$@"
 }
 
 tmux() {
