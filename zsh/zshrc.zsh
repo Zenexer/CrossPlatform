@@ -138,8 +138,9 @@ tmux() {
 }
 
 if [[ -d ~/.zsh/init ]]; then
-	for f in ~/.zsh/init/*; do
+	for f in ~/.zsh/init/*(N-.Y1); do
 		. "$f"
 	done
 	unset f
 fi
+
