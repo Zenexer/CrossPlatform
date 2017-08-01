@@ -76,17 +76,17 @@ function fixterm() {
 			fi
 			;;
 
-		*-256color)
+		linux|*-256color)
 			chooseterm "$TERM" xterm-256color && return 0 || return 1
 			;;
 
 		xterm)
 			echo "Warning: Ambiguous terminal: $TERM" >&2
-			chooseterm "$TERM-256color" linux-256color && return 0 || return 1
+			chooseterm "$TERM-256color" linux && return 0 || return 1
 			;;
 
-		linux|putty)
-			chooseterm "$TERM-256color" xterm-256color && return 0 || return 1
+		putty)
+			chooseterm linux xterm-256color && return 0 || return 1
 			;;
 
 		cygwin)
@@ -98,7 +98,7 @@ function fixterm() {
 			;;
 
 		gnome|xfce)
-			chooseterm "$TERM-256color" linux-256color xterm-256color && return 0 || return 1
+			chooseterm "$TERM-256color" linux xterm-256color && return 0 || return 1
 			;;
 
 		*-*|*.*|*+*)
@@ -106,7 +106,7 @@ function fixterm() {
 			;;
 
 		*)
-			chooseterm "$TERM-256color" xterm-256color && return 0 || return 1
+			chooseterm "$TERM-256color" "$TERM" xterm-256color && return 0 || return 1
 			;;
 
 	esac
