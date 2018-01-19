@@ -75,13 +75,13 @@ function chooseterm() {
 function fixterm() {
 	emulate -L zsh
 
+	if (( $+TMUX )); then
+		chooseterm tmux-256color screen-256color screen linux xterm-256color && return 0 || return 1
+	fi
+
 	case "$TERM" in
 		screen|screen-256color)
-			if (( $+TMUX )); then
-				chooseterm tmux-256color screen-256color linux xterm-256color && return 0 || return 1
-			else
-				chooseterm screen-256color linux xterm-256color && return 0 || return 1
-			fi
+			chooseterm screen-256color linux xterm-256color && return 0 || return 1
 			;;
 
 		linux|xterm-256color)
@@ -150,6 +150,17 @@ nvim() {
 
 tmux() {
 	command tmux $TMUX_OPTIONS "$@"
+}
+
+byobu() {
+	# Work around byobu bug introduced around 2018-01-19; color won't work for linux term type
+	if [[ $TERM = linux ]]; then
+		TERM=xterm-256color command byobu "$@"
+		return $?
+	else
+		command byobu "$@"
+		return $?
+	fi
 }
 
 if [[ -d ~/.zsh/init ]]; then
