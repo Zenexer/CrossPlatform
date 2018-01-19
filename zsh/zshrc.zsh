@@ -4,7 +4,17 @@
 REPORTTIME=2
 VIM_OPTIONS=( -p )
 NVIM_OPTIONS=$VIM_OPTIONS
-TMUX_OPTIONS=( -2 )
+
+case "$COLORTERM" in
+	yes|truecolor|24bit)
+		export COLORTERM=truecolor
+		TMUX_OPTIONS=( )
+		;;
+
+	*)
+		TMUX_OPTIONS=( -2 )
+		;;
+esac
 
 function hasterm() {
 	emulate -L zsh
@@ -65,18 +75,21 @@ function chooseterm() {
 function fixterm() {
 	emulate -L zsh
 
-	local term=
-
 	case "$TERM" in
 		screen|screen-256color)
 			if (( $+TMUX )); then
-				chooseterm tmux-256color screen-256color xterm-256color && return 0 || return 1
+				chooseterm tmux-256color screen-256color linux xterm-256color && return 0 || return 1
 			else
-				chooseterm screen-256color xterm-256color && return 0 || return 1
+				chooseterm screen-256color linux xterm-256color && return 0 || return 1
 			fi
 			;;
 
-		linux|*-256color)
+		linux|xterm-256color)
+			echo "$TERM"
+			return 0
+			;;
+
+		*-256color)
 			chooseterm "$TERM" xterm-256color && return 0 || return 1
 			;;
 
@@ -122,8 +135,10 @@ function debug() {
 	echoco 8 - "$*"
 }
 
+
+export ORIG_TERM="$TERM"
 export TERM="$(fixterm)"
-debug "Terminal: $TERM" >&2
+debug "Terminal: $ORIG_TERM -> $TERM" >&2
 
 if check_com -c nvim; then
 	export EDITOR=nvim

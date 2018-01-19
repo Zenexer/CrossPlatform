@@ -214,6 +214,8 @@
 		set nofoldenable							" Disable folding by default. zi to toggle.
 		set foldmethod=syntax						" Fold based on syntax.
 
+		let g:php_folding=2
+
 		" Spacebar toggles current fold if in fold; defaults to old spacebar behavior otherwise.
 		nnoremap <expr> <silent> <Space> (foldlevel('.') ? 'za' : "\<Space>")
 
