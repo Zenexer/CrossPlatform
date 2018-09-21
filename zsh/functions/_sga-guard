@@ -1,0 +1,36 @@
+#compdef sga-guard
+
+# vim: sw=2 ts=2 sts=2 et
+
+_sga-guard() {
+  local curcontext="$curcontext" state
+  local -a _comp_priv_prefix
+
+  _arguments -s -C : \
+    '(-)'{-h,--help}'[display help information]' \
+    '(-)'{-V,--version}'[display version information]' \
+    '--debug[show debug information]' \
+    '-l+[specify login name]:login name:_ssh_users' \
+    '--log=[specify log file]:log file:_files' \
+    '--ssh=[specify ssh program to run when setting up session]:ssh command:_cmdstring' \
+    '--policy=[specify policy config file]:policy file:_files' \
+    '--stub=[specify remote stub command]:stub command:_cmdstring' \
+    '--prompt=[sepcify type of prompt to use]:prompt type:(DISPLAY TERMINAL)' \
+    ':remote host name:->userhost'
+
+  case $state in
+    userhost)
+      if compset -P '*@'; then
+        _wanted hosts expl 'remote host name' _ssh_hosts
+      elif compset -S '@*'; then
+        _wanted users expl 'login name' _combination -s '[:@]' my-accounts users-hosts users -S ''
+      else
+        _alternative \
+          'hosts:remote host name:_ssh_hosts' \
+          'users:login name:_combination -s "[:@]" my-accounts users-hosts users -qS@'
+      fi
+    ;;
+  esac
+}
+
+_sga-guard "$@"

@@ -118,6 +118,7 @@ make_folder ~/.undo
 make_folder ~/.config/nvim
 make_folder ~/.zsh/cache
 make_folder ~/.zsh/init
+make_folder ~/.zsh/functions
 make_folder ~/.local/share/nvim/backup
 make_folder ~/.local/share/nvim/swap
 make_folder ~/.local/share/nvim/undo
@@ -130,8 +131,16 @@ install_file    config/tmux.conf        ~/.tmux.conf
 install_file    nvim/config/init.vim    ~/.config/nvim/init.vim
 install_file    config/minttyrc         ~/.minttyrc
 
+for f in zsh/functions/_*; do
+	install_file "$f" ~/.zsh/functions
+done
+
 "$XP_FOLDER/grml.sh"
 "$XP_FOLDER/git.sh" && true
+
+if type zsh > /dev/null 2>&1; then
+	zsh -c 'rehash && rm -i ${ZDOTDIR:-${HOME:?No ZDOTDIR or HOME}}/.zcompdump && compinit'
+fi
 
 case "$OSTYPE" in
 	darwin*)

@@ -5,6 +5,8 @@ REPORTTIME=2
 VIM_OPTIONS=( )
 NVIM_OPTIONS=$VIM_OPTIONS
 
+fpath=( ~/.zsh/functions $fpath )
+
 case "$COLORTERM" in
 	yes|truecolor|24bit)
 		export COLORTERM=truecolor
