@@ -137,7 +137,7 @@ case "$OSTYPE" in
 	darwin*)
 		if ! grep -qF '/.bashrc' /etc/bashrc; then
 			if ! grep -qF -e '~/.bashrc' -e '$HOME/.bashrc' /etc/bashrc; then
-				local yn=
+				yn=
 				echo -n $'\e[31mPatch /etc/bashrc? [y/n]:\e[m ' >&2
 				read -srn1 yn || true
 				echo

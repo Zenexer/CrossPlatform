@@ -2,7 +2,7 @@
 # vim: ts=4 sw=4 sts=4 sr sts=4 noet ff=unix fenc=utf-8
 
 REPORTTIME=2
-VIM_OPTIONS=( -p )
+VIM_OPTIONS=( )
 NVIM_OPTIONS=$VIM_OPTIONS
 
 case "$COLORTERM" in
@@ -138,10 +138,20 @@ function debug() {
 
 export ORIG_TERM="$TERM"
 export TERM="$(fixterm)"
-debug "Terminal: $ORIG_TERM -> $TERM" >&2
 
 if check_com -c nvim; then
 	export EDITOR=nvim
+	alias vim=nvim
+elif check_com -c vim; then
+	export EDITOR=vim
+elif check_com -c vi; then
+	export EDITOR=vi
+fi
+
+if [[ "$ORIG_TERM" = "$TERM" ]]; then
+	debug "Terminal: $TERM; Editor: $EDITOR" >&2
+else
+	debug "Terminal: $ORIG_TERM -> $TERM; Editor: $EDITOR" >&2
 fi
 
 nvim() {
