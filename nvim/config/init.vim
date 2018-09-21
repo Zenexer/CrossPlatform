@@ -237,10 +237,10 @@
 		endif
 	
 	" Windows And Tabs: Windows, tabs, and buffers. {{{2
-		"set hidden									" Enable hidden buffers.
+		set hidden									" Enable hidden buffers.
 		
 		if has('windows')
-			set showtabline=2						" Always show tabs.
+			"set showtabline=2						" Always show tabs.
 			set switchbuf=usetab,split				" Try to use an existing tab.  Compile errors go in split windows.
 		endif
 
