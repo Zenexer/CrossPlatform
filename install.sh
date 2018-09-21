@@ -139,7 +139,7 @@ done
 "$XP_FOLDER/git.sh" && true
 
 if type zsh > /dev/null 2>&1; then
-	zsh -c 'rehash && rm -i ${ZDOTDIR:-${HOME:?No ZDOTDIR or HOME}}/.zcompdump && compinit'
+	zsh -c 'rehash && rm -f -- ${ZDOTDIR:-${HOME:?No ZDOTDIR or HOME}}/.zcompdump'
 fi
 
 case "$OSTYPE" in
