@@ -173,10 +173,16 @@
 	set modeline									" Read vim settings from comments at top/bottom of file.
 	set modelines=5									" Leave enough room to put header comments before modelines; don't do that, though.
 
-	filetype on										" Enable filetype detection scripts.
-	filetype plugin on								" Enable filetype plugin scripts.
-	filetype indent on								" Enable syntax-based automatic indentation.
-	syntax enable									" Enable syntax highlighting and such.
+	" Syntax Specific: Individual languages. {{{2
+		" PHP: {{{3
+			"let g:php_folding=1                    " Enable syntax-based folding.  Disabled because it breaks syntax
+			                                        "   highlighting.   
+
+	" Syntax Enable: Needs to run after language-specifc. {{{2
+		filetype on									" Enable filetype detection scripts.
+		filetype plugin on							" Enable filetype plugin scripts.
+		filetype indent on							" Enable syntax-based automatic indentation.
+		syntax enable								" Enable syntax highlighting and such.
 
 
 " User Interface: Colors, line numbering, etc. {{{1

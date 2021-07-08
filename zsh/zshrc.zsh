@@ -176,7 +176,8 @@ byobu() {
 }
 
 if [[ -d ~/.zsh/init ]]; then
-	for f in ~/.zsh/init/*(N-.Y1); do
+	for f in ~/.zsh/init/*(N); do
+		debug "Sourcing $f"
 		. "$f"
 	done
 	unset f

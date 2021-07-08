@@ -214,8 +214,6 @@
 		set nofoldenable							" Disable folding by default. zi to toggle.
 		set foldmethod=syntax						" Fold based on syntax.
 
-		let g:php_folding=2
-
 		" Spacebar toggles current fold if in fold; defaults to old spacebar behavior otherwise.
 		nnoremap <expr> <silent> <Space> (foldlevel('.') ? 'za' : "\<Space>")
 
@@ -241,6 +239,13 @@
 				\		setlocal omnifunc=syntaxcomplete#Complete |
 				\	endif
 		endif
+
+	" Syntax Specific: Individual languages. {{{2
+		" PHP: {{{3
+			let g:php_folding=1
+
+	" Syntax Enable: Needs to run after language-specifc. {{{2
+		syntax enable
 
 
 " User Interface: Colors, line numbering, etc. {{{1
