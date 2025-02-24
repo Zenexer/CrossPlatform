@@ -200,7 +200,8 @@
 
 	" Disabled to use platform defaults.
 	"colorscheme torte								" Basic color scheme.  Normally overridden by bundles/includes.
-	"set background=dark
+	set background=light
+	set termguicolors
 
 	" For use with :mkview; specifies what to save
 	set viewoptions=cursor,folds,options
