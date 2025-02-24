@@ -38,4 +38,9 @@ fi
 unset BASHRC_FOLDER
 
 # $XP_FOLDER/shell/profile.sh {{{2
-[ -x "$XP_FOLDER/shell/bash_profile.sh" ] && source "$XP_FOLDER/shell/bash_profile.sh"
+if [[ -x "$XP_FOLDER/shell/bash_profile.sh" ]]; then
+	. "$XP_FOLDER/shell/bash_profile.sh"
+fi
+if [[ -e ~/.cargo/env ]]; then
+	. ~/.cargo/env
+fi
