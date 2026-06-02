@@ -5,10 +5,6 @@ REPORTTIME=2
 VIM_OPTIONS=( )
 NVIM_OPTIONS=$VIM_OPTIONS
 
-# Export so Claude Code's shell snapshot captures it. grml's chpwd hook does
-# `(( $DIRSTACKSIZE <= 0 ))` (literal substitution); empty value → bad-math error.
-export DIRSTACKSIZE=${DIRSTACKSIZE:-20}
-
 fpath=( ~/.zsh/functions $fpath )
 
 case "$COLORTERM" in
