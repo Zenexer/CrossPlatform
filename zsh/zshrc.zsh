@@ -5,6 +5,7 @@ REPORTTIME=2
 VIM_OPTIONS=( )
 NVIM_OPTIONS=$VIM_OPTIONS
 
+path=( ~/.local/bin $path )
 fpath=( ~/.zsh/functions $fpath )
 
 case "$COLORTERM" in
